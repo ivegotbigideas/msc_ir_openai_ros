@@ -26,7 +26,7 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         
         # Only variable needed to be set here
 
-        print("Start WamvNavTwoSetsBuoysEnv INIT...")
+        #print("Start WamvNavTwoSetsBuoysEnv INIT...")
         number_actions = rospy.get_param('/wamv/n_actions')
         self.action_space = spaces.Discrete(number_actions)
         
@@ -82,8 +82,8 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         
         self.observation_space = spaces.Box(low, high)
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         
@@ -95,7 +95,7 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         # Here we will add any init functions prior to starting the MyRobotEnv
         super(WamvNavTwoSetsBuoysEnv, self).__init__()
         
-        print("END WamvNavTwoSetsBuoysEnv INIT...")
+        #print("END WamvNavTwoSetsBuoysEnv INIT...")
 
     def _set_init_pose(self):
         """
@@ -137,7 +137,7 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         :param action: The action integer that sets what movement to do next.
         """
         
-        print("Start Set Action ==>"+str(action))
+        #print("Start Set Action ==>"+str(action))
        
         
         right_propeller_speed = 0.0
@@ -162,7 +162,7 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
                                     left_propeller_speed,
                                     time_sleep=1.0)
         
-        print("END Set Action ==>"+str(action))
+        #print("END Set Action ==>"+str(action))
 
     def _get_obs(self):
         """
@@ -171,7 +171,7 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         WamvEnv API DOCS.
         :return: observation
         """
-        print("Start Get Observation ==>")
+        #print("Start Get Observation ==>")
 
         odom = self.get_odom()
         base_position = odom.pose.pose.position
@@ -239,7 +239,7 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
             
             # If there has been a decrease in the distance to the desired point, we reward it
             if distance_difference < 0.0:
-                print("DECREASE IN DISTANCE GOOD")
+                #print("DECREASE IN DISTANCE GOOD")
                 reward = self.closer_to_point_reward
             else:
                 rospy.logerr("ENCREASE IN DISTANCE BAD")
@@ -256,11 +256,11 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         self.previous_distance_from_des_point = distance_from_des_point
 
 
-        print("reward=" + str(reward))
+        #print("reward=" + str(reward))
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
 
         return reward
 
@@ -288,14 +288,14 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         
         is_in_desired_pos = x_pos_are_close and y_pos_are_close
         
-        print("###### IS DESIRED POS ? ######")
-        print("current_position"+str(current_position))
-        print("x_pos_plus"+str(x_pos_plus)+",x_pos_minus="+str(x_pos_minus))
-        print("y_pos_plus"+str(y_pos_plus)+",y_pos_minus="+str(y_pos_minus))
-        print("x_pos_are_close"+str(x_pos_are_close))
-        print("y_pos_are_close"+str(y_pos_are_close))
-        print("is_in_desired_pos"+str(is_in_desired_pos))
-        print("############")
+        #print("###### IS DESIRED POS ? ######")
+        #print("current_position"+str(current_position))
+        #print("x_pos_plus"+str(x_pos_plus)+",x_pos_minus="+str(x_pos_minus))
+        #print("y_pos_plus"+str(y_pos_plus)+",y_pos_minus="+str(y_pos_minus))
+        #print("x_pos_are_close"+str(x_pos_are_close))
+        #print("y_pos_are_close"+str(y_pos_are_close))
+        #print("is_in_desired_pos"+str(is_in_desired_pos))
+        #print("############")
         
         return is_in_desired_pos
     
@@ -339,11 +339,11 @@ class WamvNavTwoSetsBuoysEnv(wamv_env.WamvEnv):
         """
         is_inside = False
 
-        print("##### INSIDE WORK SPACE? #######")
-        print("XYZ current_position"+str(current_position))
-        print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
-        print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
-        print("############")
+        #print("##### INSIDE WORK SPACE? #######")
+        #print("XYZ current_position"+str(current_position))
+        #print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
+        #print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
+        #print("############")
 
         if current_position.x > self.work_space_x_min and current_position.x <= self.work_space_x_max:
             if current_position.y > self.work_space_y_min and current_position.y <= self.work_space_y_max:

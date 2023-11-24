@@ -32,7 +32,7 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        print("Start WamvEnv INIT...")
+        #print("Start WamvEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -52,7 +52,7 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
 
 
 
-        print("WamvEnv unpause1...")
+        #print("WamvEnv unpause1...")
         self.gazebo.unpauseSim()
         #self.controllers_object.reset_controllers()
         
@@ -72,7 +72,7 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
         
-        print("Finished WamvEnv INIT...")
+        #print("Finished WamvEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -83,9 +83,9 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the sensors, publishers and other simulation systems are
         operational.
         """
-        print("WamvEnv check_all_systems_ready...")
+        #print("WamvEnv check_all_systems_ready...")
         self._check_all_sensors_ready()
-        print("END WamvEnv _check_all_systems_ready...")
+        #print("END WamvEnv _check_all_systems_ready...")
         return True
 
 
@@ -93,18 +93,18 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        print("START ALL SENSORS READY")
+        #print("START ALL SENSORS READY")
         self._check_odom_ready()
-        print("ALL SENSORS READY")
+        #print("ALL SENSORS READY")
 
         
     def _check_odom_ready(self):
         self.odom = None
-        print("Waiting for /wamv/odom to be READY...")
+        #print("Waiting for /wamv/odom to be READY...")
         while self.odom is None and not rospy.is_shutdown():
             try:
                 self.odom = rospy.wait_for_message("/wamv/odom", Odometry, timeout=1.0)
-                print("Current /wamv/odom READY=>")
+                #print("Current /wamv/odom READY=>")
 
             except:
                 rospy.logerr("Current /wamv/odom not ready yet, retrying for getting odom")
@@ -121,24 +121,24 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the publishers are working
         :return:
         """
-        print("START ALL SENSORS READY")
+        #print("START ALL SENSORS READY")
         for publisher_object in self.publishers_array:
             self._check_pub_connection(publisher_object)
-        print("ALL SENSORS READY")
+        #print("ALL SENSORS READY")
 
     def _check_pub_connection(self, publisher_object):
 
         rate = rospy.Rate(10)  # 10hz
         while publisher_object.get_num_connections() == 0 and not rospy.is_shutdown():
-            print("No susbribers to publisher_object yet so we wait and try again")
+            #print("No susbribers to publisher_object yet so we wait and try again")
             try:
                 rate.sleep()
             except rospy.ROSInterruptException:
                 # This is to avoid error when world is rested, time when backwards.
                 pass
-        print("publisher_object Publisher Connected")
+        #print("publisher_object Publisher Connected")
 
-        print("All Publishers READY")
+        #print("All Publishers READY")
         
     
     # Methods that the TrainingEnvironment will need to define here as virtual
@@ -186,7 +186,7 @@ class WamvEnv(robot_gazebo_env.RobotGazeboEnv):
           usv_drive_obj.right = right_propeller_speed
           usv_drive_obj.left = left_propeller_speed
           
-          print("usv_drive_obj>>"+str(usv_drive_obj))
+          #print("usv_drive_obj>>"+str(usv_drive_obj))
           publisher_object.publish(usv_drive_obj)
           i += 1
         self.wait_time_for_execute_movement(time_sleep)

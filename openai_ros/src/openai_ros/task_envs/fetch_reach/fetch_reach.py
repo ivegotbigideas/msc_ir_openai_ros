@@ -21,17 +21,17 @@ register(
 class FetchReachEnv(fetch_env_v2.FetchEnv, utils.EzPickle):
     def __init__(self):
         
-        print ("Entered Reach Env")
+        #print ("Entered Reach Env")
         
         self.get_params()
         
         fetch_env_v2.FetchEnv.__init__(self)
         utils.EzPickle.__init__(self)
         
-        print ("Call env setup")
+        #print ("Call env setup")
         self._env_setup(initial_qpos=self.init_pos)
         
-        print ("Call get_obs")
+        #print ("Call get_obs")
         obs = self._get_obs()
         
         self.action_space = spaces.Box(-1., 1., shape=(self.n_actions,), dtype='float32')
@@ -105,7 +105,7 @@ class FetchReachEnv(fetch_env_v2.FetchEnv, utils.EzPickle):
         #dt = self.sim.nsubsteps * self.sim.model.opt.timestep #What is this??
         #grip_velp = self.sim.data.get_site_xvelp('robot0:grip') * dt
         grip_rpy = self.get_ee_rpy()
-        #print grip_rpy
+        ##print grip_rpy
         grip_velp = np.array([grip_rpy.y, grip_rpy.y])
         robot_qpos, robot_qvel = self.robot_get_obs(self.joints)
         if self.has_object:
@@ -200,8 +200,8 @@ class FetchReachEnv(fetch_env_v2.FetchEnv, utils.EzPickle):
         return achieved_goal
         
     def _env_setup(self, initial_qpos):
-        print ("Init Pos:")
-        print (initial_qpos)
+        #print ("Init Pos:")
+        #print (initial_qpos)
         #for name, value in initial_qpos.items():
         self.gazebo.unpauseSim()
         self.set_trajectory_joints(initial_qpos)

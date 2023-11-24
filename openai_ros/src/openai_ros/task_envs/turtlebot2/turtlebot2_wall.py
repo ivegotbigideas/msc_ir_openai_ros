@@ -69,8 +69,8 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
         # We only use two integers
         self.observation_space = spaces.Box(low, high)
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         self.forwards_reward = rospy.get_param("/turtlebot2/forwards_reward")
@@ -115,7 +115,7 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
         :param action: The action integer that set s what movement to do next.
         """
         
-        print("Start Set Action ==>"+str(action))
+        #print("Start Set Action ==>"+str(action))
         # We convert the actions to speed movements to send to the parent class CubeSingleDiskEnv
         if action == 0: #FORWARD
             linear_speed = self.linear_forward_speed
@@ -134,7 +134,7 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
         # We tell TurtleBot2 the linear and angular speed to set to execute
         self.move_base(linear_speed, angular_speed, epsilon=0.05, update_rate=10)
         
-        print("END Set Action ==>"+str(action))
+        #print("END Set Action ==>"+str(action))
 
     def _get_obs(self):
         """
@@ -143,7 +143,7 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
         TurtleBot2Env API DOCS
         :return:
         """
-        print("Start Get Observation ==>")
+        #print("Start Get Observation ==>")
         # We get the laser scan data
         laser_scan = self.get_laser_scan()
         
@@ -164,8 +164,8 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
 
         observations = discretized_laser_scan + odometry_array
 
-        print("Observations==>"+str(observations))
-        print("END Get Observation ==>")
+        #print("Observations==>"+str(observations))
+        #print("END Get Observation ==>")
         return observations
         
 
@@ -191,7 +191,7 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
             
             if current_position.x <= MAX_X and current_position.x > MIN_X:
                 if current_position.y <= MAX_Y and current_position.y > MIN_Y:
-                    print("TurtleBot Position is OK ==>["+str(current_position.x)+","+str(current_position.y)+"]")
+                    #print("TurtleBot Position is OK ==>["+str(current_position.x)+","+str(current_position.y)+"]")
                     
                     # We see if it got to the desired point
                     if self.is_in_desired_position(current_position):
@@ -230,7 +230,7 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
                 
             # If there has been a decrease in the distance to the desired point, we reward it
             if distance_difference < 0.0:
-                print("DECREASE IN DISTANCE GOOD")
+                #print("DECREASE IN DISTANCE GOOD")
                 reward += self.forwards_reward
             else:
                 rospy.logerr("ENCREASE IN DISTANCE BAD")
@@ -247,11 +247,11 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
         self.previous_distance_from_des_point = distance_from_des_point
 
 
-        print("reward=" + str(reward))
+        #print("reward=" + str(reward))
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
         
         return reward
 
@@ -268,9 +268,9 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
         discretized_ranges = []
         mod = len(data.ranges)/new_ranges
         
-        print("data=" + str(data))
-        print("new_ranges=" + str(new_ranges))
-        print("mod=" + str(mod))
+        #print("data=" + str(data))
+        #print("new_ranges=" + str(new_ranges))
+        #print("mod=" + str(mod))
         
         for i, item in enumerate(data.ranges):
             if (i%mod==0):
@@ -285,7 +285,7 @@ class TurtleBot2WallEnv(turtlebot2_env.TurtleBot2Env):
                     rospy.logerr("done Validation >>> item=" + str(item)+"< "+str(self.min_range))
                     self._episode_done = True
                 else:
-                    print("NOT done Validation >>> item=" + str(item)+"< "+str(self.min_range))
+                    #print("NOT done Validation >>> item=" + str(item)+"< "+str(self.min_range))
                     
 
         return discretized_ranges

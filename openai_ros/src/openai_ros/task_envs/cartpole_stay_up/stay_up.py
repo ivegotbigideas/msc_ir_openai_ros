@@ -65,16 +65,16 @@ class CartPoleStayUpEnv(cartpole_env.CartPoleEnv):
         rospy.loginfo("MOVING TO POS=="+str(self.pos))
 
         # 1st: unpause simulation
-        #print("Unpause SIM...")
+        ##print("Unpause SIM...")
         #self.gazebo.unpauseSim()
 
         self.move_joints(self.pos)
-        print("Wait for some time to execute movement, time="+str(self.running_step))
+        #print("Wait for some time to execute movement, time="+str(self.running_step))
         rospy.sleep(self.running_step) #wait for some time
-        print("DONE Wait for some time to execute movement, time=" + str(self.running_step))
+        #print("DONE Wait for some time to execute movement, time=" + str(self.running_step))
 
         # 3rd: pause simulation
-        #print("Pause SIM...")
+        ##print("Pause SIM...")
         #self.gazebo.pauseSim()
 
     def _get_obs(self):
@@ -112,7 +112,7 @@ class CartPoleStayUpEnv(cartpole_env.CartPoleEnv):
         having different data than other previous functions
         :return:reward
         """
-        print("START _compute_reward")
+        #print("START _compute_reward")
         
         if not done:
             reward = 1.0
@@ -126,7 +126,7 @@ class CartPoleStayUpEnv(cartpole_env.CartPoleEnv):
             self.steps_beyond_done += 1
             reward = 0.0
         
-        print("END _compute_reward")
+        #print("END _compute_reward")
         
         return reward
         

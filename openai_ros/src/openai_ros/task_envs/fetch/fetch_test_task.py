@@ -18,7 +18,7 @@ register(
 class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
     def __init__(self):
         
-        print("Entered FetchTestEnv Env")
+        #print("Entered FetchTestEnv Env")
         self.get_params()
         
         fetch_env.FetchEnv.__init__(self)
@@ -68,38 +68,38 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
         The Simulation will be unpaused for this purpose.
         """
         # Check because it seems its not being used
-        print("Init Pos:")
-        print(self.init_pos)
+        #print("Init Pos:")
+        #print(self.init_pos)
 
         """
         # Init Joint Pose
-        print("Moving To SETUP Joints ")
+        #print("Moving To SETUP Joints ")
         self.movement_result = self.set_trajectory_joints(self.init_pos)
         """
         
         # We test the Desired Goal
         
         # INIT POSE
-        print("Moving To TEST DESIRED GOAL Position ")
+        #print("Moving To TEST DESIRED GOAL Position ")
         action = self.create_action(self.desired_position,self.gripper_rotation)
         self.movement_result = self.set_trajectory_ee(action)
             
         
         if self.movement_result:
             # INIT POSE
-            print("Moving To SETUP Position ")
+            #print("Moving To SETUP Position ")
             self.last_gripper_target = [self.setup_ee_pos["x"],self.setup_ee_pos["y"],self.setup_ee_pos["z"]]
             action = self.create_action(self.last_gripper_target,self.gripper_rotation)
             self.movement_result = self.set_trajectory_ee(action)
             
             self.current_dist_from_des_pos_ee = self.calculate_distance_between(self.desired_position,self.last_gripper_target)
-            print("INIT DISTANCE FROM GOAL==>"+str(self.current_dist_from_des_pos_ee))
+            #print("INIT DISTANCE FROM GOAL==>"+str(self.current_dist_from_des_pos_ee))
         else:
             assert False, "Desired GOAL EE is not possible"
         
         self.last_action = "INIT"
         
-        print("Init Pose Results ==>"+str(self.movement_result))
+        #print("Init Pose Results ==>"+str(self.movement_result))
 
         return self.movement_result
 
@@ -113,8 +113,8 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
         callbackas have stored last know sesnor data.
         :return:
         """
-        print("Init Env Variables...")
-        print("Init Env Variables...END")
+        #print("Init Env Variables...")
+        #print("Init Env Variables...END")
     
 
     def _set_action(self, action):
@@ -158,7 +158,7 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
         else:
             rospy.logerr("Impossible End Effector Position...."+str(gripper_target))
         
-        print("END Set Action ==>"+str(action)+", NAME="+str(self.last_action))
+        #print("END Set Action ==>"+str(action)+", NAME="+str(self.last_action))
 
     def _get_obs(self):
         """
@@ -175,7 +175,7 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
         
         obs.append(new_dist_from_des_pos_ee)
 
-        print("OBSERVATIONS====>>>>>>>"+str(obs))
+        #print("OBSERVATIONS====>>>>>>>"+str(obs))
 
         return obs
         
@@ -203,7 +203,7 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
         new_dist_from_des_pos_ee = observations[-1]
         
         reward = self.calculate_reward(self.movement_result, self.desired_position, current_pos, new_dist_from_des_pos_ee)
-        print(">>>REWARD>>>"+str(reward))
+        #print(">>>REWARD>>>"+str(reward))
         
         return reward
         
@@ -220,10 +220,10 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
 
             if position_similar:
                 done = True
-                print("Reached a Desired Position!")
+                #print("Reached a Desired Position!")
         else:
             done = True
-            print("Reached a TCP position not reachable")
+            #print("Reached a TCP position not reachable")
             
         return done
         
@@ -237,30 +237,30 @@ class FetchTestEnv(fetch_env.FetchEnv, utils.EzPickle):
             position_similar = np.all(np.isclose(desired_position, current_pos, atol=1e-02))
             
             # Calculating Distance
-            print("desired_position="+str(desired_position))
-            print("current_pos="+str(current_pos))
-            print("self.current_dist_from_des_pos_ee="+str(self.current_dist_from_des_pos_ee))
-            print("new_dist_from_des_pos_ee="+str(new_dist_from_des_pos_ee))
+            #print("desired_position="+str(desired_position))
+            #print("current_pos="+str(current_pos))
+            #print("self.current_dist_from_des_pos_ee="+str(self.current_dist_from_des_pos_ee))
+            #print("new_dist_from_des_pos_ee="+str(new_dist_from_des_pos_ee))
             
             delta_dist = new_dist_from_des_pos_ee - self.current_dist_from_des_pos_ee
             if position_similar:
                 reward = self.reached_goal_reward
-                print("Reached a Desired Position!")
+                #print("Reached a Desired Position!")
             else:
                 if delta_dist < 0:
                     reward = self.closer_reward
-                    print("CLOSER To Desired Position!="+str(delta_dist))
+                    #print("CLOSER To Desired Position!="+str(delta_dist))
                 else:
                     reward = self.step_punishment
-                    print("FURTHER FROM Desired Position!"+str(delta_dist))
+                    #print("FURTHER FROM Desired Position!"+str(delta_dist))
             
         else:
             reward = self.impossible_movement_punishement
-            print("Reached a TCP position not reachable")
+            #print("Reached a TCP position not reachable")
             
         # We update the distance
         self.current_dist_from_des_pos_ee = new_dist_from_des_pos_ee
-        print("Updated Distance from GOAL=="+str(self.current_dist_from_des_pos_ee))
+        #print("Updated Distance from GOAL=="+str(self.current_dist_from_des_pos_ee))
             
         return reward
         

@@ -58,8 +58,8 @@ class MovingCubeOneDiskWalkEnv(cube_single_disk_env.CubeSingleDiskEnv):
         
         self.observation_space = spaces.Box(-high, high)
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Variables that we retrieve through the param server, loded when launch training launch.
         self.init_roll_vel = rospy.get_param("/moving_cube/init_roll_vel")
@@ -119,11 +119,11 @@ class MovingCubeOneDiskWalkEnv(cube_single_disk_env.CubeSingleDiskEnv):
             self.roll_turn_speed -= self.roll_speed_increment_value
 
         # We clamp Values to maximum
-        print("roll_turn_speed before clamp=="+str(self.roll_turn_speed))
+        #print("roll_turn_speed before clamp=="+str(self.roll_turn_speed))
         self.roll_turn_speed = numpy.clip(self.roll_turn_speed,
                                           -1*self.roll_speed_fixed_value,
                                           self.roll_speed_fixed_value)
-        print("roll_turn_speed after clamp==" + str(self.roll_turn_speed))
+        #print("roll_turn_speed after clamp==" + str(self.roll_turn_speed))
 
         # We tell the OneDiskCube to spin the RollDisk at the selected speed
         self.move_joints(self.roll_turn_speed)
@@ -159,7 +159,7 @@ class MovingCubeOneDiskWalkEnv(cube_single_disk_env.CubeSingleDiskEnv):
             round(yaw, 1)
         ]
         
-        print("Observations==>"+str(cube_observations))
+        #print("Observations==>"+str(cube_observations))
 
         return cube_observations
         
@@ -173,12 +173,12 @@ class MovingCubeOneDiskWalkEnv(cube_single_disk_env.CubeSingleDiskEnv):
             rospy.logerr("WRONG Cube Pitch Orientation==>" + str(pitch_angle))
             done = True
         else:
-            print("Cube Pitch Orientation Ok==>" + str(pitch_angle))
+            #print("Cube Pitch Orientation Ok==>" + str(pitch_angle))
             if abs(yaw_angle) > self.max_yaw_angle:
                 rospy.logerr("WRONG Cube Yaw Orientation==>" + str(yaw_angle))
                 done = True
             else:
-                print("Cube Yaw Orientation Ok==>" + str(yaw_angle))
+                #print("Cube Yaw Orientation Ok==>" + str(yaw_angle))
                 done = False
 
         return done
@@ -189,38 +189,38 @@ class MovingCubeOneDiskWalkEnv(cube_single_disk_env.CubeSingleDiskEnv):
 
             y_distance_now = observations[1]
             delta_distance = y_distance_now - self.current_y_distance
-            print("y_distance_now=" + str(y_distance_now)+", current_y_distance=" + str(self.current_y_distance))
-            print("delta_distance=" + str(delta_distance))
+            #print("y_distance_now=" + str(y_distance_now)+", current_y_distance=" + str(self.current_y_distance))
+            #print("delta_distance=" + str(delta_distance))
             reward_distance = delta_distance * self.move_distance_reward_weight
             self.current_y_distance = y_distance_now
 
             y_linear_speed = observations[4]
-            print("y_linear_speed=" + str(y_linear_speed))
+            #print("y_linear_speed=" + str(y_linear_speed))
             reward_y_axis_speed = y_linear_speed * self.y_linear_speed_reward_weight
 
             # Negative Reward for yaw different from zero.
             yaw_angle = observations[5]
-            print("yaw_angle=" + str(yaw_angle))
+            #print("yaw_angle=" + str(yaw_angle))
             # Worst yaw is 90 and 270 degrees, best 0 and 180. We use sin function for giving reward.
             sin_yaw_angle = math.sin(yaw_angle)
-            print("sin_yaw_angle=" + str(sin_yaw_angle))
+            #print("sin_yaw_angle=" + str(sin_yaw_angle))
             reward_y_axis_angle = -1 * abs(sin_yaw_angle) * self.y_axis_angle_reward_weight
 
 
             # We are not intereseted in decimals of the reward, doesnt give any advatage.
             reward = round(reward_distance, 0) + round(reward_y_axis_speed, 0) + round(reward_y_axis_angle, 0)
-            print("reward_distance=" + str(reward_distance))
-            print("reward_y_axis_speed=" + str(reward_y_axis_speed))
-            print("reward_y_axis_angle=" + str(reward_y_axis_angle))
-            print("reward=" + str(reward))
+            #print("reward_distance=" + str(reward_distance))
+            #print("reward_y_axis_speed=" + str(reward_y_axis_speed))
+            #print("reward_y_axis_angle=" + str(reward_y_axis_angle))
+            #print("reward=" + str(reward))
         else:
             reward = -1*self.end_episode_points
 
 
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
         
         return reward
 

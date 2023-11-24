@@ -66,7 +66,7 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
         # In the discretization method.
         #laser_scan = self._check_laser_scan_ready()
         laser_scan = self.get_laser_scan()
-        print("laser_scan len===>"+str(len(laser_scan.ranges)))
+        #print("laser_scan len===>"+str(len(laser_scan.ranges)))
         
         # Laser data
         self.laser_scan_frame = laser_scan.header.frame_id
@@ -76,8 +76,8 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
         # Number of laser reading jumped
         self.new_ranges = int(math.ceil(float(len(laser_scan.ranges)) / float(self.n_observations)))
         
-        print("n_observations===>"+str(self.n_observations))
-        print("new_ranges, jumping laser readings===>"+str(self.new_ranges))
+        #print("n_observations===>"+str(self.n_observations))
+        #print("new_ranges, jumping laser readings===>"+str(self.new_ranges))
         
         
         high = numpy.full((self.n_observations), self.max_laser_value)
@@ -87,8 +87,8 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
         self.observation_space = spaces.Box(low, high)
         
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         self.forwards_reward = rospy.get_param("/turtlebot2/forwards_reward")
@@ -140,7 +140,7 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
         :param action: The action integer that set s what movement to do next.
         """
         
-        print("Start Set Action ==>"+str(action))
+        #print("Start Set Action ==>"+str(action))
         # We convert the actions to speed movements to send to the parent class CubeSingleDiskEnv
         if action == 0: #FORWARD
             linear_speed = self.linear_forward_speed
@@ -162,7 +162,7 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
                         update_rate=10,
                         min_laser_distance=self.min_range)
         
-        print("END Set Action ==>"+str(action)+", NAME="+str(self.last_action))
+        #print("END Set Action ==>"+str(action)+", NAME="+str(self.last_action))
 
     def _get_obs(self):
         """
@@ -171,26 +171,26 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
         TurtleBot2Env API DOCS
         :return:
         """
-        print("Start Get Observation ==>")
+        #print("Start Get Observation ==>")
         # We get the laser scan data
         laser_scan = self.get_laser_scan()
         
-        print("BEFORE DISCRET _episode_done==>"+str(self._episode_done))
+        #print("BEFORE DISCRET _episode_done==>"+str(self._episode_done))
         
         discretized_observations = self.discretize_observation( laser_scan,
                                                                 self.new_ranges
                                                                 )
 
-        print("Observations==>"+str(discretized_observations))
-        print("AFTER DISCRET_episode_done==>"+str(self._episode_done))
-        print("END Get Observation ==>")
+        #print("Observations==>"+str(discretized_observations))
+        #print("AFTER DISCRET_episode_done==>"+str(self._episode_done))
+        #print("END Get Observation ==>")
         return discretized_observations
         
 
     def _is_done(self, observations):
         
         if self._episode_done:
-            print("TurtleBot2 is Too Close to wall==>"+str(self._episode_done))
+            #print("TurtleBot2 is Too Close to wall==>"+str(self._episode_done))
         else:
             rospy.logerr("TurtleBot2 is Ok ==>")
 
@@ -207,11 +207,11 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
             reward = -1*self.end_episode_points
 
 
-        print("reward=" + str(reward))
+        #print("reward=" + str(reward))
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
         
         return reward
 
@@ -233,8 +233,8 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
         max_laser_value = data.range_max
         min_laser_value = data.range_min
         
-        print("data=" + str(data))
-        print("mod=" + str(mod))
+        #print("data=" + str(data))
+        #print("mod=" + str(mod))
         
         for i, item in enumerate(data.ranges):
             if (i%mod==0):
@@ -252,14 +252,14 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
                     rospy.logerr("done Validation >>> item=" + str(item)+"< "+str(self.min_range))
                     self._episode_done = True
                 else:
-                    print("NOT done Validation >>> item=" + str(item)+"< "+str(self.min_range))
+                    #print("NOT done Validation >>> item=" + str(item)+"< "+str(self.min_range))
                 # We add last value appended
                 filtered_range.append(discretized_ranges[-1])
             else:
                 # We add value zero
                 filtered_range.append(0.1)
                     
-        print("Size of observations, discretized_ranges==>"+str(len(discretized_ranges)))
+        #print("Size of observations, discretized_ranges==>"+str(len(discretized_ranges)))
         
         
         self.publish_filtered_laser_scan(   laser_original_data=data,
@@ -270,7 +270,7 @@ class TurtleBot2MazeEnv(turtlebot2_env.TurtleBot2Env):
     
     def publish_filtered_laser_scan(self, laser_original_data, new_filtered_laser_range):
         
-        print("new_filtered_laser_range==>"+str(new_filtered_laser_range))
+        #print("new_filtered_laser_range==>"+str(new_filtered_laser_range))
         
         laser_filtered_object = LaserScan()
 

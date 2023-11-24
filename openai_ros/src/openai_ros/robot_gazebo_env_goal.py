@@ -11,11 +11,11 @@ class RobotGazeboEnv(gym.GoalEnv):
     def __init__(self, robot_name_space, controllers_list, reset_controls):
 
         # To reset Simulations
-        print ("Entered Gazebo Env")
+        #print ("Entered Gazebo Env")
         self.gazebo = GazeboConnection(start_init_physics_parameters=False, reset_world_or_sim="WORLD")
         self.controllers_object = ControllersConnection(namespace=robot_name_space, controllers_list=controllers_list)
         self.reset_controls = reset_controls
-        print (self.reset_controls)
+        #print (self.reset_controls)
         self.seed()
 
         # Set up ROS related variables
@@ -40,16 +40,16 @@ class RobotGazeboEnv(gym.GoalEnv):
         Here we should convert the action num to movement action, execute the action in the
         simulation and get the observations result of performing that action.
         """
-        print ("Entered step")
-        print ("Unpause sim")
+        #print ("Entered step")
+        #print ("Unpause sim")
         self.gazebo.unpauseSim()
-        print ("Set action")
-        print ("Action:")
-        print (action)
+        #print ("Set action")
+        #print ("Action:")
+        #print (action)
         self._set_action(action)
-        print ("Get Obs")
+        #print ("Get Obs")
         obs = self._get_obs()
-        print ("Is done")
+        #print ("Is done")
         done = self._is_done(obs)
         info = {}
         reward = self._compute_reward(obs, done)
@@ -58,8 +58,8 @@ class RobotGazeboEnv(gym.GoalEnv):
         return obs, reward, done, info
 
     def reset(self):
-        print("Reseting RobotGazeboEnvironment")
-        print ("Entered reset")
+        #print("Reseting RobotGazeboEnvironment")
+        #print ("Entered reset")
         self._reset_sim()
         self._init_env_variables()
         self._update_episode()
@@ -72,7 +72,7 @@ class RobotGazeboEnv(gym.GoalEnv):
         Use it for closing GUIS and other systems that need closing.
         :return:
         """
-        print("Closing RobotGazeboEnvironment")
+        #print("Closing RobotGazeboEnvironment")
         rospy.signal_shutdown("Closing RobotGazeboEnvironment")
 
     def _update_episode(self):

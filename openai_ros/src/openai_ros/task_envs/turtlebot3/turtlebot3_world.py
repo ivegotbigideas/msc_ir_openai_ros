@@ -67,8 +67,8 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         # We only use two integers
         self.observation_space = spaces.Box(low, high)
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         self.forwards_reward = rospy.get_param("/turtlebot3/forwards_reward")
@@ -110,7 +110,7 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         :param action: The action integer that set s what movement to do next.
         """
         
-        print("Start Set Action ==>"+str(action))
+        #print("Start Set Action ==>"+str(action))
         # We convert the actions to speed movements to send to the parent class CubeSingleDiskEnv
         if action == 0: #FORWARD
             linear_speed = self.linear_forward_speed
@@ -128,7 +128,7 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         # We tell TurtleBot2 the linear and angular speed to set to execute
         self.move_base(linear_speed, angular_speed, epsilon=0.05, update_rate=10)
         
-        print("END Set Action ==>"+str(action))
+        #print("END Set Action ==>"+str(action))
 
     def _get_obs(self):
         """
@@ -137,7 +137,7 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         TurtleBot2Env API DOCS
         :return:
         """
-        print("Start Get Observation ==>")
+        #print("Start Get Observation ==>")
         # We get the laser scan data
         laser_scan = self.get_laser_scan()
         
@@ -145,8 +145,8 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
                                                                         self.new_ranges
                                                                         )
 
-        print("Observations==>"+str(discretized_observations))
-        print("END Get Observation ==>")
+        #print("Observations==>"+str(discretized_observations))
+        #print("END Get Observation ==>")
         return discretized_observations
         
 
@@ -155,7 +155,7 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         if self._episode_done:
             rospy.logerr("TurtleBot2 is Too Close to wall==>")
         else:
-            print("TurtleBot2 is NOT close to a wall ==>")
+            #print("TurtleBot2 is NOT close to a wall ==>")
             
         # Now we check if it has crashed based on the imu
         imu_data = self.get_imu()
@@ -180,11 +180,11 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
             reward = -1*self.end_episode_points
 
 
-        print("reward=" + str(reward))
+        #print("reward=" + str(reward))
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
         
         return reward
 
@@ -201,9 +201,9 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
         discretized_ranges = []
         mod = len(data.ranges)/new_ranges
         
-        print("data=" + str(data))
-        print("new_ranges=" + str(new_ranges))
-        print("mod=" + str(mod))
+        #print("data=" + str(data))
+        #print("new_ranges=" + str(new_ranges))
+        #print("mod=" + str(mod))
         
         for i, item in enumerate(data.ranges):
             if (i%mod==0):
@@ -218,7 +218,7 @@ class TurtleBot3WorldEnv(turtlebot3_env.TurtleBot3Env):
                     rospy.logerr("done Validation >>> item=" + str(item)+"< "+str(self.min_range))
                     self._episode_done = True
                 else:
-                    print("NOT done Validation >>> item=" + str(item)+"< "+str(self.min_range))
+                    #print("NOT done Validation >>> item=" + str(item)+"< "+str(self.min_range))
                     
 
         return discretized_ranges

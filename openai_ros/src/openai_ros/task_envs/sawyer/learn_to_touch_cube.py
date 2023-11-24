@@ -30,7 +30,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         
         # Only variable needed to be set here
 
-        print("Start SawyerTouchCubeEnv INIT...")
+        #print("Start SawyerTouchCubeEnv INIT...")
         number_actions = rospy.get_param('/sawyer/n_actions')
         self.action_space = spaces.Discrete(number_actions)
         
@@ -98,8 +98,8 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         
         self.observation_space = spaces.Box(low, high)
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         
@@ -110,7 +110,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
 
         
         
-        print("END SawyerTouchCubeEnv INIT...")
+        #print("END SawyerTouchCubeEnv INIT...")
 
     def _set_init_pose(self):
         """
@@ -175,7 +175,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         :param action: The action integer that sets what movement to do next.
         """
         
-        print("Start Set Action ==>"+str(action))
+        #print("Start Set Action ==>"+str(action))
        
         
         if action == 0: # Increase joint_0
@@ -211,7 +211,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         # We tell sawyer the action to perform
         self.execute_movement(action_id)
         
-        print("END Set Action ==>"+str(action)+","+str(action_id))
+        #print("END Set Action ==>"+str(action)+","+str(action_id))
 
     def _get_obs(self):
         """
@@ -220,7 +220,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         sawyerEnv API DOCS.
         :return: observation
         """
-        print("Start Get Observation ==>")
+        #print("Start Get Observation ==>")
 
         # We get the translation of the base of the gripper to the block
         translation_tcp_block, _ = self.get_tf_start_to_end_frames(start_frame_name="block",
@@ -236,7 +236,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
 
         # Same here, the values are used internally for knowing if done, they wont define the state ( although these are left out for performance)
         self.joints_efforts_dict = self.get_all_limb_joint_efforts()
-        print("JOINTS EFFORTS DICT OBSERVATION METHOD==>"+str(self.joints_efforts_dict))
+        #print("JOINTS EFFORTS DICT OBSERVATION METHOD==>"+str(self.joints_efforts_dict))
         """
         We supose that its all these:
         head_pan, right_gripper_l_finger_joint, right_gripper_r_finger_joint, right_j0, right_j1,
@@ -281,12 +281,12 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         
         done = is_stuck or not(is_inside_workspace) or has_reached_the_block
         
-        print("#### IS DONE ? ####")
-        print("is_stuck ?="+str(is_stuck))
-        print("Not is_inside_workspace ?="+str(not(is_inside_workspace)))
-        print("has_reached_the_block ?="+str(has_reached_the_block))
-        print("done ?="+str(done))
-        print("#### #### ####")
+        #print("#### IS DONE ? ####")
+        #print("is_stuck ?="+str(is_stuck))
+        #print("Not is_inside_workspace ?="+str(not(is_inside_workspace)))
+        #print("has_reached_the_block ?="+str(has_reached_the_block))
+        #print("done ?="+str(done))
+        #print("#### #### ####")
         
         return done
 
@@ -310,7 +310,7 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
             
             # If there has been a decrease in the distance to the desired point, we reward it
             if distance_difference < 0.0:
-                print("DECREASE IN DISTANCE GOOD")
+                #print("DECREASE IN DISTANCE GOOD")
                 reward = self.closer_to_block_reward
             else:
                 rospy.logerr("ENCREASE IN DISTANCE BAD")
@@ -330,11 +330,11 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         self.previous_distance_from_block = distance_block_to_tcp
 
 
-        print("reward=" + str(reward))
+        #print("reward=" + str(reward))
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
 
         return reward
 
@@ -354,16 +354,16 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
                 index = self.joint_limits.joint_names.index(joint_name)
                 effort_limit = self.joint_limits.effort[index]
                 
-                print("Joint Effort ==>Name="+str(joint_name)+",Effort="+str(effort_value)+",Limit="+str(effort_limit))
+                #print("Joint Effort ==>Name="+str(joint_name)+",Effort="+str(effort_value)+",Limit="+str(effort_limit))
 
                 if abs(effort_value) > effort_limit:
                     is_arm_stuck = True
                     rospy.logerr("Joint Effort TOO MUCH ==>"+str(joint_name)+","+str(effort_value))
                     break
                 else:
-                    print("Joint Effort is ok==>"+str(joint_name)+","+str(effort_value))
+                    #print("Joint Effort is ok==>"+str(joint_name)+","+str(effort_value))
             else:
-                print("Joint Name is not in the effort dict==>"+str(joint_name))
+                #print("Joint Name is not in the effort dict==>"+str(joint_name))
         
         return is_arm_stuck
     
@@ -384,11 +384,11 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         distance_ok = distance_to_block <= minimum_distance
         reached_block_b = distance_ok and tcp_z_pos_ok
         
-        print("###### REACHED BLOCK ? ######")
-        print("tcp_z_pos_ok==>"+str(tcp_z_pos_ok))
-        print("distance_ok==>"+str(distance_ok))
-        print("reached_block_b==>"+str(reached_block_b))
-        print("############")
+        #print("###### REACHED BLOCK ? ######")
+        #print("tcp_z_pos_ok==>"+str(tcp_z_pos_ok))
+        #print("distance_ok==>"+str(distance_ok))
+        #print("reached_block_b==>"+str(reached_block_b))
+        #print("############")
         
         return reached_block_b
     
@@ -446,12 +446,12 @@ class SawyerTouchCubeEnv(sawyer_env.SawyerEnv):
         """
         is_inside = False
 
-        print("##### INSIDE WORK SPACE? #######")
-        print("XYZ current_position"+str(current_position))
-        print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
-        print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
-        print("work_space_z_max"+str(self.work_space_z_max)+",work_space_z_min="+str(self.work_space_z_min))
-        print("############")
+        #print("##### INSIDE WORK SPACE? #######")
+        #print("XYZ current_position"+str(current_position))
+        #print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
+        #print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
+        #print("work_space_z_max"+str(self.work_space_z_max)+",work_space_z_min="+str(self.work_space_z_min))
+        #print("############")
 
         if current_position.x > self.work_space_x_min and current_position.x <= self.work_space_x_max:
             if current_position.y > self.work_space_y_min and current_position.y <= self.work_space_y_max:

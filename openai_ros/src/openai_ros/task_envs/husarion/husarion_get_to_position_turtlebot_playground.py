@@ -98,8 +98,8 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         
         self.observation_space = spaces.Box(low, high)
         
-        print("ACTION SPACES TYPE===>"+str(self.action_space))
-        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        #print("ACTION SPACES TYPE===>"+str(self.action_space))
+        #print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         self.closer_to_point_reward = rospy.get_param("/husarion/closer_to_point_reward")
@@ -146,7 +146,7 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         :param action: The action integer that set s what movement to do next.
         """
         
-        print("Start Set Action ==>"+str(action))
+        #print("Start Set Action ==>"+str(action))
         # We convert the actions to speed movements to send to the parent class CubeSingleDiskEnv
         if action == 0: #FORWARD
             linear_speed = self.linear_forward_speed
@@ -169,7 +169,7 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         # We tell Husarion the linear and angular speed to set to execute
         self.move_base(linear_speed, angular_speed, epsilon=self.move_base_precision, update_rate=10)
         
-        print("END Set Action ==>"+str(action)+", ACTION="+str(last_action))
+        #print("END Set Action ==>"+str(action)+", ACTION="+str(last_action))
 
     def _get_obs(self):
         """
@@ -178,7 +178,7 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         HusarionEnv API DOCS
         :return:
         """
-        print("Start Get Observation ==>")
+        #print("Start Get Observation ==>")
         # We get the laser scan data
         laser_scan = self.get_laser_scan()
         
@@ -208,8 +208,8 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         # We concatenate all the lists.
         observations = discretized_laser_scan + odometry_array + desired_position
 
-        print("Observations==>"+str(observations))
-        print("END Get Observation ==>")
+        #print("Observations==>"+str(observations))
+        #print("END Get Observation ==>")
         
         return observations
         
@@ -236,9 +236,9 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         desired_position.y = observations[-1]
         desired_position.z = 0.0
         
-        print("is DONE? laser_readings=" + str(laser_readings))
-        print("is DONE? current_position=" + str(current_position))
-        print("is DONE? desired_position=" + str(desired_position))
+        #print("is DONE? laser_readings=" + str(laser_readings))
+        #print("is DONE? current_position=" + str(current_position))
+        #print("is DONE? desired_position=" + str(desired_position))
         
         too_close_to_object = self.check_husarion_has_crashed(laser_readings)
         inside_workspace = self.check_inside_workspace(current_position)
@@ -250,12 +250,12 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         is_done = too_close_to_object or not(inside_workspace) or reached_des_pos
         
         
-        print("####################")
-        print("too_close_to_object=" + str(too_close_to_object))
-        print("inside_workspace=" + str(inside_workspace))
-        print("reached_des_pos=" + str(reached_des_pos))
-        print("is_done=" + str(is_done))
-        print("######## END DONE ##")
+        #print("####################")
+        #print("too_close_to_object=" + str(too_close_to_object))
+        #print("inside_workspace=" + str(inside_workspace))
+        #print("reached_des_pos=" + str(reached_des_pos))
+        #print("is_done=" + str(is_done))
+        #print("######## END DONE ##")
 
         
         return is_done
@@ -289,17 +289,17 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         distance_difference =  distance_from_des_point - self.previous_distance_from_des_point
 
 
-        print("current_position=" + str(current_position))
-        print("desired_point=" + str(desired_position))
+        #print("current_position=" + str(current_position))
+        #print("desired_point=" + str(desired_position))
         
-        print("total_distance_from_des_point=" + str(self.previous_distance_from_des_point))
-        print("distance_from_des_point=" + str(distance_from_des_point))
-        print("distance_difference=" + str(distance_difference))
+        #print("total_distance_from_des_point=" + str(self.previous_distance_from_des_point))
+        #print("distance_from_des_point=" + str(distance_from_des_point))
+        #print("distance_difference=" + str(distance_difference))
 
         if not done:
             # If there has been a decrease in the distance to the desired point, we reward it
             if distance_difference < 0.0:
-                print("DECREASE IN DISTANCE GOOD")
+                #print("DECREASE IN DISTANCE GOOD")
                 reward = self.closer_to_point_reward
             else:
                 reward = self.alive_reward
@@ -311,18 +311,18 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
             
             if reached_des_pos:
                 reward = self.end_episode_points
-                print("GOT TO DESIRED POINT ; DONE, reward=" + str(reward))
+                #print("GOT TO DESIRED POINT ; DONE, reward=" + str(reward))
             else:
                 reward = -1*self.end_episode_points
                 rospy.logerr("SOMETHING WENT WRONG ; DONE, reward=" + str(reward))
 
         self.previous_distance_from_des_point = distance_from_des_point
         
-        print("reward=" + str(reward))
+        #print("reward=" + str(reward))
         self.cumulated_reward += reward
-        print("Cumulated_reward=" + str(self.cumulated_reward))
+        #print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        print("Cumulated_steps=" + str(self.cumulated_steps))
+        #print("Cumulated_steps=" + str(self.cumulated_steps))
         
         return reward
 
@@ -351,9 +351,9 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         
         filtered_range = []
         
-        print("data=" + str(data))
-        print("new_ranges=" + str(new_ranges))
-        print("mod=" + str(mod))
+        #print("data=" + str(data))
+        #print("new_ranges=" + str(new_ranges))
+        #print("mod=" + str(mod))
         
         nan_value = (self.min_laser_value + self.min_laser_value) / 2.0
         
@@ -368,13 +368,13 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
                 else:
                     # We clamp the laser readings
                     if item > self.max_laser_value:
-                        print("Item Bigger Than MAX, CLAMPING=>" + str(item)+", MAX="+str(self.max_laser_value))
+                        #print("Item Bigger Than MAX, CLAMPING=>" + str(item)+", MAX="+str(self.max_laser_value))
                         discretized_ranges.append(round(self.max_laser_value,1))
                     elif item < self.min_laser_value:
-                        print("Item smaller Than MIN, CLAMPING=>" + str(item)+", MIN="+str(self.min_laser_value))
+                        #print("Item smaller Than MIN, CLAMPING=>" + str(item)+", MIN="+str(self.min_laser_value))
                         discretized_ranges.append(round(self.min_laser_value,1))
                     else:
-                        print("Normal Item, no processing=>" + str(item))
+                        #print("Normal Item, no processing=>" + str(item))
                         discretized_ranges.append(round(item,1))
                 # We add last value appended
                 filtered_range.append(discretized_ranges[-1]) 
@@ -383,7 +383,7 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
                 filtered_range.append(0.0)
                     
                     
-        print(">>>>>>>>>>>>>>>>>>>>>>discretized_ranges=>" + str(discretized_ranges))
+        #print(">>>>>>>>>>>>>>>>>>>>>>discretized_ranges=>" + str(discretized_ranges))
         
         self.publish_filtered_laser_scan(   laser_original_data=data,
                                             new_filtered_laser_range=filtered_range)
@@ -436,10 +436,10 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         husarion_has_crashed = False
         
         for laser_distance in laser_readings:
-            print("laser_distance==>"+str(laser_distance))
+            #print("laser_distance==>"+str(laser_distance))
             if laser_distance == self.min_laser_value:
                 husarion_has_crashed = True
-                print("HAS CRASHED==>"+str(laser_distance)+", min="+str(self.min_laser_value))
+                #print("HAS CRASHED==>"+str(laser_distance)+", min="+str(self.min_laser_value))
                 break
                 
             elif laser_distance < self.min_laser_value:
@@ -457,11 +457,11 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         """
         is_inside = False
 
-        print("##### INSIDE WORK SPACE? #######")
-        print("XYZ current_position"+str(current_position))
-        print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
-        print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
-        print("############")
+        #print("##### INSIDE WORK SPACE? #######")
+        #print("XYZ current_position"+str(current_position))
+        #print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
+        #print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
+        #print("############")
 
         if current_position.x > self.work_space_x_min and current_position.x <= self.work_space_x_max:
             if current_position.y > self.work_space_y_min and current_position.y <= self.work_space_y_max:
@@ -491,15 +491,15 @@ class HusarionGetToPosTurtleBotPlayGroundEnv(husarion_env.HusarionEnv):
         
         is_in_desired_pos = x_pos_are_close and y_pos_are_close
         
-        print("###### IS DESIRED POS ? ######")
-        print("epsilon==>"+str(epsilon))
-        print("current_position"+str(current_position))
-        print("x_pos_plus"+str(x_pos_plus)+",x_pos_minus="+str(x_pos_minus))
-        print("y_pos_plus"+str(y_pos_plus)+",y_pos_minus="+str(y_pos_minus))
-        print("x_pos_are_close"+str(x_pos_are_close))
-        print("y_pos_are_close"+str(y_pos_are_close))
-        print("is_in_desired_pos"+str(is_in_desired_pos))
-        print("############")
+        #print("###### IS DESIRED POS ? ######")
+        #print("epsilon==>"+str(epsilon))
+        #print("current_position"+str(current_position))
+        #print("x_pos_plus"+str(x_pos_plus)+",x_pos_minus="+str(x_pos_minus))
+        #print("y_pos_plus"+str(y_pos_plus)+",y_pos_minus="+str(y_pos_minus))
+        #print("x_pos_are_close"+str(x_pos_are_close))
+        #print("y_pos_are_close"+str(y_pos_are_close))
+        #print("is_in_desired_pos"+str(is_in_desired_pos))
+        #print("############")
         
         return is_in_desired_pos
         

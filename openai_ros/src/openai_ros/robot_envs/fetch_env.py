@@ -14,7 +14,7 @@ import trajectory_msgs.msg
 class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def __init__(self):
-        print("Entered Fetch Env")
+        #print("Entered Fetch Env")
         
         self.controllers_list = []
 
@@ -76,14 +76,14 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
     def _check_all_sensors_ready(self):
         self._check_joint_states_ready()
         
-        print("ALL SENSORS READY")
+        #print("ALL SENSORS READY")
 
     def _check_joint_states_ready(self):
         self.joints = None
         while self.joints is None and not rospy.is_shutdown():
             try:
                 self.joints = rospy.wait_for_message(self.JOINT_STATES_SUBSCRIBER, JointState, timeout=1.0)
-                print("Current "+str(self.JOINT_STATES_SUBSCRIBER)+" READY=>" + str(self.joints))
+                #print("Current "+str(self.JOINT_STATES_SUBSCRIBER)+" READY=>" + str(self.joints))
 
             except:
                 rospy.logerr("Current "+str(self.JOINT_STATES_SUBSCRIBER)+" not ready yet, retrying....")
@@ -111,9 +111,9 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
         ee_target.position.y = action[1]
         ee_target.position.z = action[2]
         
-        print("Set Trajectory EE...START...POSITION="+str(ee_target.position))
+        #print("Set Trajectory EE...START...POSITION="+str(ee_target.position))
         result = self.move_fetch_object.ee_traj(ee_target)
-        print("Set Trajectory EE...END...RESULT="+str(result))
+        #print("Set Trajectory EE...END...RESULT="+str(result))
         
         return result
         
@@ -217,11 +217,11 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
         for i in range(20):
             current_joints = self.get_joints()
             joint_pos = current_joints.position
-            #print("JOINTS POS NOW="+str(joint_pos))
-            print("WAITING..."+str(i))
+            ##print("JOINTS POS NOW="+str(joint_pos))
+            #print("WAITING..."+str(i))
             time.sleep(1.0)
             
-        print("WAITING...DONE")
+        #print("WAITING...DONE")
             
             
     
@@ -256,18 +256,18 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
 class MoveFetch(object):
     
     def __init__(self):
-        print("In Move Fetch Calss init...")
+        #print("In Move Fetch Calss init...")
         moveit_commander.roscpp_initialize(sys.argv)
-        print("moveit_commander initialised...")
+        #print("moveit_commander initialised...")
         
-        print("Starting Robot Commander...")
+        #print("Starting Robot Commander...")
         self.robot = moveit_commander.RobotCommander()
-        print("Starting Robot Commander...DONE")
+        #print("Starting Robot Commander...DONE")
         
         self.scene = moveit_commander.PlanningSceneInterface()  
-        print("PlanningSceneInterface initialised...DONE")
+        #print("PlanningSceneInterface initialised...DONE")
         self.group = moveit_commander.MoveGroupCommander("arm")
-        print("MoveGroupCommander for arm initialised...DONE")
+        #print("MoveGroupCommander for arm initialised...DONE")
 
         
     def ee_traj(self, pose):
@@ -281,10 +281,10 @@ class MoveFetch(object):
     def joint_traj(self, positions_array):
         
         self.group_variable_values = self.group.get_current_joint_values()
-        print("Group Vars:")
-        print(self.group_variable_values)
-        print("Point:")
-        print(positions_array)
+        #print("Group Vars:")
+        #print(self.group_variable_values)
+        #print("Point:")
+        #print(positions_array)
         self.group_variable_values[0] = positions_array[0]
         self.group_variable_values[1] = positions_array[1]
         self.group_variable_values[2] = positions_array[2]
@@ -308,7 +308,7 @@ class MoveFetch(object):
         
         gripper_pose = self.group.get_current_pose()
 
-        print("EE POSE==>"+str(gripper_pose))
+        #print("EE POSE==>"+str(gripper_pose))
 
         return gripper_pose
         

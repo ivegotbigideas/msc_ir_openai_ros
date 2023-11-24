@@ -13,7 +13,7 @@ class FetchEnv(robot_gazebo_env_goal.RobotGazeboEnv):
     """
 
     def __init__(self):
-        print ("Entered Fetch Env")
+        #print ("Entered Fetch Env")
         """Initializes a new Fetch environment.
 
         Args:
@@ -73,14 +73,14 @@ class FetchEnv(robot_gazebo_env_goal.RobotGazeboEnv):
     def _check_all_sensors_ready(self):
         self._check_joint_states_ready()
         
-        print("ALL SENSORS READY")
+        #print("ALL SENSORS READY")
 
     def _check_joint_states_ready(self):
         self.joints = None
         while self.joints is None and not rospy.is_shutdown():
             try:
                 self.joints = rospy.wait_for_message("/joint_states", JointState, timeout=1.0)
-                print("Current /joint_states READY=>" + str(self.joints))
+                #print("Current /joint_states READY=>" + str(self.joints))
 
             except:
                 rospy.logerr("Current /joint_states not ready yet, retrying for getting joint_states")

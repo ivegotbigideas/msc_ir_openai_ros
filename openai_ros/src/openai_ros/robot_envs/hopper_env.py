@@ -43,7 +43,7 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        print("Start HopperEnv INIT...")
+        #print("Start HopperEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -66,7 +66,7 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
 
 
 
-        print("HopperEnv unpause1...")
+        #print("HopperEnv unpause1...")
         self.gazebo.unpauseSim()
         #self.controllers_object.reset_controllers()
         
@@ -96,7 +96,7 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
         
-        print("Finished HopperEnv INIT...")
+        #print("Finished HopperEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -107,9 +107,9 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the sensors, publishers and other simulation systems are
         operational.
         """
-        print("HopperEnv check_all_systems_ready...")
+        #print("HopperEnv check_all_systems_ready...")
         self._check_all_sensors_ready()
-        print("END HopperEnv _check_all_systems_ready...")
+        #print("END HopperEnv _check_all_systems_ready...")
         return True
 
 
@@ -117,21 +117,21 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        print("START ALL SENSORS READY")
+        #print("START ALL SENSORS READY")
         self._check_odom_ready()
         self._check_imu_ready()
         self._check_lowerleg_contactsensor_state_ready()
         self._check_joint_states_ready()
-        print("ALL SENSORS READY")
+        #print("ALL SENSORS READY")
 
         
     def _check_odom_ready(self):
         self.odom = None
-        print("Waiting for /odom to be READY...")
+        #print("Waiting for /odom to be READY...")
         while self.odom is None and not rospy.is_shutdown():
             try:
                 self.odom = rospy.wait_for_message("/odom", Odometry, timeout=1.0)
-                print("Current /odom READY=>")
+                #print("Current /odom READY=>")
 
             except:
                 rospy.logerr("Current /odom not ready yet, retrying for getting odom")
@@ -140,11 +140,11 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_imu_ready(self):
         self.imu = None
-        print("Waiting for /monoped/imu/data to be READY...")
+        #print("Waiting for /monoped/imu/data to be READY...")
         while self.imu is None and not rospy.is_shutdown():
             try:
                 self.imu = rospy.wait_for_message("/monoped/imu/data", Imu, timeout=1.0)
-                print("Current /monoped/imu/data READY=>")
+                #print("Current /monoped/imu/data READY=>")
 
             except:
                 rospy.logerr("Current /monoped/imu/data not ready yet, retrying for getting imu")
@@ -153,11 +153,11 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_lowerleg_contactsensor_state_ready(self):
         self.lowerleg_contactsensor_state = None
-        print("Waiting for /lowerleg_contactsensor_state to be READY...")
+        #print("Waiting for /lowerleg_contactsensor_state to be READY...")
         while self.lowerleg_contactsensor_state is None and not rospy.is_shutdown():
             try:
                 self.lowerleg_contactsensor_state = rospy.wait_for_message("/lowerleg_contactsensor_state", ContactsState, timeout=1.0)
-                print("Current /lowerleg_contactsensor_state READY=>")
+                #print("Current /lowerleg_contactsensor_state READY=>")
 
             except:
                 rospy.logerr("Current /lowerleg_contactsensor_state not ready yet, retrying for getting lowerleg_contactsensor_state")
@@ -165,11 +165,11 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_joint_states_ready(self):
         self.joint_states = None
-        print("Waiting for /monoped/joint_states to be READY...")
+        #print("Waiting for /monoped/joint_states to be READY...")
         while self.joint_states is None and not rospy.is_shutdown():
             try:
                 self.joint_states = rospy.wait_for_message("/monoped/joint_states", JointState, timeout=1.0)
-                print("Current /monoped/joint_states READY=>")
+                #print("Current /monoped/joint_states READY=>")
 
             except:
                 rospy.logerr("Current /monoped/joint_states not ready yet, retrying for getting joint_states")
@@ -195,24 +195,24 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the publishers are working
         :return:
         """
-        print("START ALL SENSORS READY")
+        #print("START ALL SENSORS READY")
         for publisher_object in self.publishers_array:
             self._check_pub_connection(publisher_object)
-        print("ALL SENSORS READY")
+        #print("ALL SENSORS READY")
 
     def _check_pub_connection(self, publisher_object):
 
         rate = rospy.Rate(10)  # 10hz
         while publisher_object.get_num_connections() == 0 and not rospy.is_shutdown():
-            print("No susbribers to publisher_object yet so we wait and try again")
+            #print("No susbribers to publisher_object yet so we wait and try again")
             try:
                 rate.sleep()
             except rospy.ROSInterruptException:
                 # This is to avoid error when world is rested, time when backwards.
                 pass
-        print("publisher_object Publisher Connected")
+        #print("publisher_object Publisher Connected")
 
-        print("All Publishers READY")
+        #print("All Publishers READY")
         
     
     # Methods that the TrainingEnvironment will need to define here as virtual
@@ -258,7 +258,7 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         for publisher_object in self.publishers_array:
           joint_value = Float64()
           joint_value.data = joints_array[i]
-          print("JointsPos>>"+str(joint_value))
+          #print("JointsPos>>"+str(joint_value))
           publisher_object.publish(joint_value)
           i += 1
         
@@ -275,14 +275,14 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         :param update_rate: Rate at which we check the joint_states.
         :return:
         """
-        print("START wait_until_twist_achieved...")
+        #print("START wait_until_twist_achieved...")
         
         rate = rospy.Rate(update_rate)
         start_wait_time = rospy.get_rostime().to_sec()
         end_wait_time = 0.0
 
-        print("Desired JointsState>>" + str(joints_array))
-        print("epsilon>>" + str(epsilon))
+        #print("Desired JointsState>>" + str(joints_array))
+        #print("epsilon>>" + str(epsilon))
         
         while not rospy.is_shutdown():
             current_joint_states = self._check_joint_states_ready()
@@ -294,15 +294,15 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
             vel_values_are_close = self.check_array_similar(joints_array,values_to_check,epsilon)
             
             if vel_values_are_close:
-                print("Reached JointStates!")
+                #print("Reached JointStates!")
                 end_wait_time = rospy.get_rostime().to_sec()
                 break
-            print("Not there yet, keep waiting...")
+            #print("Not there yet, keep waiting...")
             rate.sleep()
         delta_time = end_wait_time- start_wait_time
-        print("[Wait Time=" + str(delta_time)+"]")
+        #print("[Wait Time=" + str(delta_time)+"]")
         
-        print("END wait_until_jointstate_achieved...")
+        #print("END wait_until_jointstate_achieved...")
         
         return delta_time
         
@@ -310,15 +310,15 @@ class HopperEnv(robot_gazebo_env.RobotGazeboEnv):
         """
         Hard Wait to avoid inconsistencies in times executing actions
         """
-        print("Test Wait="+str(time_sleep))
+        #print("Test Wait="+str(time_sleep))
         time.sleep(time_sleep)
     
     def check_array_similar(self,ref_value_array,check_value_array,epsilon):
         """
         It checks if the check_value id similar to the ref_value
         """
-        print("ref_value_array="+str(ref_value_array))
-        print("check_value_array="+str(check_value_array))
+        #print("ref_value_array="+str(ref_value_array))
+        #print("check_value_array="+str(check_value_array))
         return numpy.allclose(ref_value_array, check_value_array, atol=epsilon)
     
 
