@@ -35,7 +35,7 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        rospy.logdebug("Start SawyerEnv INIT...")
+        print("Start SawyerEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -55,7 +55,7 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
 
 
 
-        rospy.logdebug("SawyerEnv unpause...")
+        print("SawyerEnv unpause...")
         self.gazebo.unpauseSim()
         #self.controllers_object.reset_controllers()
         
@@ -71,7 +71,7 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
         
-        rospy.logdebug("Finished SawyerEnv INIT...")
+        print("Finished SawyerEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -82,9 +82,9 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the sensors, publishers and other simulation systems are
         operational.
         """
-        rospy.logdebug("SawyerEnv check_all_systems_ready...")
+        print("SawyerEnv check_all_systems_ready...")
         self._check_all_sensors_ready()
-        rospy.logdebug("END SawyerEnv _check_all_systems_ready...")
+        print("END SawyerEnv _check_all_systems_ready...")
         return True
 
 
@@ -92,20 +92,20 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        rospy.logdebug("START ALL SENSORS READY")
+        print("START ALL SENSORS READY")
         # TODO: Here go the sensors like cameras and joint states
         self._check_head_camera_image_raw_ready()
         self._check_right_hand_camera_image_raw_ready()
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
         
     
     def _check_head_camera_image_raw_ready(self):
         self.head_camera_image_raw = None
-        rospy.logdebug("Waiting for /io/internal_camera/head_camera/image_raw to be READY...")
+        print("Waiting for /io/internal_camera/head_camera/image_raw to be READY...")
         while self.head_camera_image_raw is None and not rospy.is_shutdown():
             try:
                 self.head_camera_image_raw = rospy.wait_for_message("/io/internal_camera/head_camera/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /io/internal_camera/head_camera/image_raw READY=>")
+                print("Current /io/internal_camera/head_camera/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /io/internal_camera/head_camera/image_raw not ready yet, retrying for getting head_camera_image_raw")
@@ -113,11 +113,11 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
     
     def _check_right_hand_camera_image_raw_ready(self):
         self.right_hand_camera_image_raw = None
-        rospy.logdebug("Waiting for /io/internal_camera/right_hand_camera/image_raw to be READY...")
+        print("Waiting for /io/internal_camera/right_hand_camera/image_raw to be READY...")
         while self.right_hand_camera_image_raw is None and not rospy.is_shutdown():
             try:
                 self.right_hand_camera_image_raw = rospy.wait_for_message("/io/internal_camera/right_hand_camera/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /io/internal_camera/right_hand_camera/image_raw READY=>")
+                print("Current /io/internal_camera/right_hand_camera/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /io/internal_camera/right_hand_camera/image_raw not ready yet, retrying for getting right_hand_camera_image_raw")
@@ -346,11 +346,11 @@ class SawyerEnv(robot_gazebo_env.RobotGazeboEnv):
     
     def check_joint_limits_ready(self):
         self.joint_limits = None
-        rospy.logdebug("Waiting for /robot/joint_limits to be READY...")
+        print("Waiting for /robot/joint_limits to be READY...")
         while self.joint_limits is None and not rospy.is_shutdown():
             try:
                 self.joint_limits = rospy.wait_for_message("/robot/joint_limits", JointLimits, timeout=3.0)
-                rospy.logdebug("Current /robot/joint_limits READY=>")
+                print("Current /robot/joint_limits READY=>")
 
             except:
                 rospy.logerr("Current /robot/joint_limits not ready yet, retrying for getting joint_limits")

@@ -14,7 +14,7 @@ import trajectory_msgs.msg
 class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def __init__(self):
-        rospy.logdebug("Entered Fetch Env")
+        print("Entered Fetch Env")
         
         self.controllers_list = []
 
@@ -76,14 +76,14 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
     def _check_all_sensors_ready(self):
         self._check_joint_states_ready()
         
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
 
     def _check_joint_states_ready(self):
         self.joints = None
         while self.joints is None and not rospy.is_shutdown():
             try:
                 self.joints = rospy.wait_for_message(self.JOINT_STATES_SUBSCRIBER, JointState, timeout=1.0)
-                rospy.logdebug("Current "+str(self.JOINT_STATES_SUBSCRIBER)+" READY=>" + str(self.joints))
+                print("Current "+str(self.JOINT_STATES_SUBSCRIBER)+" READY=>" + str(self.joints))
 
             except:
                 rospy.logerr("Current "+str(self.JOINT_STATES_SUBSCRIBER)+" not ready yet, retrying....")
@@ -111,9 +111,9 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
         ee_target.position.y = action[1]
         ee_target.position.z = action[2]
         
-        rospy.logdebug("Set Trajectory EE...START...POSITION="+str(ee_target.position))
+        print("Set Trajectory EE...START...POSITION="+str(ee_target.position))
         result = self.move_fetch_object.ee_traj(ee_target)
-        rospy.logdebug("Set Trajectory EE...END...RESULT="+str(result))
+        print("Set Trajectory EE...END...RESULT="+str(result))
         
         return result
         
@@ -256,18 +256,18 @@ class FetchEnv(robot_gazebo_env.RobotGazeboEnv):
 class MoveFetch(object):
     
     def __init__(self):
-        rospy.logdebug("In Move Fetch Calss init...")
+        print("In Move Fetch Calss init...")
         moveit_commander.roscpp_initialize(sys.argv)
-        rospy.logdebug("moveit_commander initialised...")
+        print("moveit_commander initialised...")
         
-        rospy.logdebug("Starting Robot Commander...")
+        print("Starting Robot Commander...")
         self.robot = moveit_commander.RobotCommander()
-        rospy.logdebug("Starting Robot Commander...DONE")
+        print("Starting Robot Commander...DONE")
         
         self.scene = moveit_commander.PlanningSceneInterface()  
-        rospy.logdebug("PlanningSceneInterface initialised...DONE")
+        print("PlanningSceneInterface initialised...DONE")
         self.group = moveit_commander.MoveGroupCommander("arm")
-        rospy.logdebug("MoveGroupCommander for arm initialised...DONE")
+        print("MoveGroupCommander for arm initialised...DONE")
 
         
     def ee_traj(self, pose):
@@ -281,10 +281,10 @@ class MoveFetch(object):
     def joint_traj(self, positions_array):
         
         self.group_variable_values = self.group.get_current_joint_values()
-        rospy.logdebug("Group Vars:")
-        rospy.logdebug(self.group_variable_values)
-        rospy.logdebug("Point:")
-        rospy.logdebug(positions_array)
+        print("Group Vars:")
+        print(self.group_variable_values)
+        print("Point:")
+        print(positions_array)
         self.group_variable_values[0] = positions_array[0]
         self.group_variable_values[1] = positions_array[1]
         self.group_variable_values[2] = positions_array[2]
@@ -308,7 +308,7 @@ class MoveFetch(object):
         
         gripper_pose = self.group.get_current_pose()
 
-        rospy.logdebug("EE POSE==>"+str(gripper_pose))
+        print("EE POSE==>"+str(gripper_pose))
 
         return gripper_pose
         

@@ -47,7 +47,7 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        rospy.logdebug("Start SumitXlEnv INIT...")
+        print("Start SumitXlEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -92,7 +92,7 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
         
-        rospy.logdebug("Finished SumitXlEnv INIT...")
+        print("Finished SumitXlEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -111,7 +111,7 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        rospy.logdebug("START ALL SENSORS READY")
+        print("START ALL SENSORS READY")
         self._check_gps_fix_ready()
         self._check_gps_fix_velocity_ready()
         self._check_camera_depth_image_raw_ready()
@@ -120,16 +120,16 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         self._check_odom_ready()
         self._check_imu_ready()
         self._check_laser_scan_ready()
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
 
     
     def _check_gps_fix_ready(self):
         self.gps_fix = None
-        rospy.logdebug("Waiting for /gps/fix to be READY...")
+        print("Waiting for /gps/fix to be READY...")
         while self.gps_fix is None and not rospy.is_shutdown():
             try:
                 self.gps_fix = rospy.wait_for_message("/gps/fix", NavSatFix, timeout=5.0)
-                rospy.logdebug("Current /gps/fix READY=>")
+                print("Current /gps/fix READY=>")
 
             except:
                 rospy.logerr("Current /gps/fix not ready yet, retrying for getting odom")
@@ -139,11 +139,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
     
     def _check_gps_fix_velocity_ready(self):
         self.gps_fix_velocity = None
-        rospy.logdebug("Waiting for /gps/fix_velocity to be READY...")
+        print("Waiting for /gps/fix_velocity to be READY...")
         while self.gps_fix_velocity is None and not rospy.is_shutdown():
             try:
                 self.gps_fix_velocity = rospy.wait_for_message("/gps/fix_velocity", Vector3Stamped, timeout=5.0)
-                rospy.logdebug("Current /gps/fix_velocity READY=>")
+                print("Current /gps/fix_velocity READY=>")
 
             except:
                 rospy.logerr("Current /gps/fix_velocity not ready yet, retrying for getting odom")
@@ -152,11 +152,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_camera_depth_image_raw_ready(self):
         self.camera_depth_image_raw = None
-        rospy.logdebug("Waiting for /orbbec_astra/depth/image_raw to be READY...")
+        print("Waiting for /orbbec_astra/depth/image_raw to be READY...")
         while self.camera_depth_image_raw is None and not rospy.is_shutdown():
             try:
                 self.camera_depth_image_raw = rospy.wait_for_message("/orbbec_astra/depth/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /orbbec_astra/depth/image_raw READY=>")
+                print("Current /orbbec_astra/depth/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /orbbec_astra/depth/image_raw not ready yet, retrying for getting camera_depth_image_raw")
@@ -165,11 +165,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_camera_depth_points_ready(self):
         self.camera_depth_points = None
-        rospy.logdebug("Waiting for /orbbec_astra/depth/points to be READY...")
+        print("Waiting for /orbbec_astra/depth/points to be READY...")
         while self.camera_depth_points is None and not rospy.is_shutdown():
             try:
                 self.camera_depth_points = rospy.wait_for_message("/orbbec_astra/depth/points", PointCloud2, timeout=10.0)
-                rospy.logdebug("Current /orbbec_astra/depth/points READY=>")
+                print("Current /orbbec_astra/depth/points READY=>")
 
             except:
                 rospy.logerr("Current /orbbec_astra/depth/points not ready yet, retrying for getting camera_depth_points")
@@ -178,11 +178,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_camera_rgb_image_raw_ready(self):
         self.camera_rgb_image_raw = None
-        rospy.logdebug("Waiting for /orbbec_astra/rgb/image_raw to be READY...")
+        print("Waiting for /orbbec_astra/rgb/image_raw to be READY...")
         while self.camera_rgb_image_raw is None and not rospy.is_shutdown():
             try:
                 self.camera_rgb_image_raw = rospy.wait_for_message("/orbbec_astra/rgb/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /orbbec_astra/rgb/image_raw READY=>")
+                print("Current /orbbec_astra/rgb/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /orbbec_astra/rgb/image_raw not ready yet, retrying for getting camera_rgb_image_raw")
@@ -191,11 +191,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _check_odom_ready(self):
         self.odom = None
-        rospy.logdebug("Waiting for /summit_xl/odom to be READY...")
+        print("Waiting for /summit_xl/odom to be READY...")
         while self.odom is None and not rospy.is_shutdown():
             try:
                 self.odom = rospy.wait_for_message("/summit_xl/odom", Odometry, timeout=0.5)
-                rospy.logdebug("Current /summit_xl/odom READY=>")
+                print("Current /summit_xl/odom READY=>")
 
             except:
                 rospy.logerr("Current /summit_xl/odom not ready yet, retrying for getting odom")
@@ -205,11 +205,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_imu_ready(self):
         self.imu = None
-        rospy.logdebug("Waiting for /imu/data to be READY...")
+        print("Waiting for /imu/data to be READY...")
         while self.imu is None and not rospy.is_shutdown():
             try:
                 self.imu = rospy.wait_for_message("/imu/data", Imu, timeout=5.0)
-                rospy.logdebug("Current /imu/data READY=>")
+                print("Current /imu/data READY=>")
 
             except:
                 rospy.logerr("Current /imu/data not ready yet, retrying for getting imu")
@@ -219,11 +219,11 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _check_laser_scan_ready(self):
         self.laser_scan = None
-        rospy.logdebug("Waiting for /hokuyo_base/scan to be READY...")
+        print("Waiting for /hokuyo_base/scan to be READY...")
         while self.laser_scan is None and not rospy.is_shutdown():
             try:
                 self.laser_scan = rospy.wait_for_message("/hokuyo_base/scan", LaserScan, timeout=1.0)
-                rospy.logdebug("Current /hokuyo_base/scan READY=>")
+                print("Current /hokuyo_base/scan READY=>")
 
             except:
                 rospy.logerr("Current /hokuyo_base/scan not ready yet, retrying for getting laser_scan")
@@ -263,15 +263,15 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         """
         rate = rospy.Rate(10)  # 10hz
         while self._cmd_vel_pub.get_num_connections() == 0 and not rospy.is_shutdown():
-            rospy.logdebug("No susbribers to _cmd_vel_pub yet so we wait and try again")
+            print("No susbribers to _cmd_vel_pub yet so we wait and try again")
             try:
                 rate.sleep()
             except rospy.ROSInterruptException:
                 # This is to avoid error when world is rested, time when backwards.
                 pass
-        rospy.logdebug("_cmd_vel_pub Publisher Connected")
+        print("_cmd_vel_pub Publisher Connected")
 
-        rospy.logdebug("All Publishers READY")
+        print("All Publishers READY")
     
     # Methods that the TrainingEnvironment will need to define here as virtual
     # because they will be used in RobotGazeboEnv GrandParentClass and defined in the
@@ -321,7 +321,7 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         cmd_vel_value = Twist()
         cmd_vel_value.linear.x = linear_speed
         cmd_vel_value.angular.z = angular_speed
-        rospy.logdebug("SumitXL Base Twist Cmd>>" + str(cmd_vel_value))
+        print("SumitXL Base Twist Cmd>>" + str(cmd_vel_value))
         self._check_publishers_connection()
         self._cmd_vel_pub.publish(cmd_vel_value)
         self.wait_until_twist_achieved(cmd_vel_value,
@@ -337,14 +337,14 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
         :param update_rate: Rate at which we check the odometry.
         :return:
         """
-        rospy.logdebug("START wait_until_twist_achieved...")
+        print("START wait_until_twist_achieved...")
         
         rate = rospy.Rate(update_rate)
         start_wait_time = rospy.get_rostime().to_sec()
         end_wait_time = 0.0
         
-        rospy.logdebug("Desired Twist Cmd>>" + str(cmd_vel_value))
-        rospy.logdebug("epsilon>>" + str(epsilon))
+        print("Desired Twist Cmd>>" + str(cmd_vel_value))
+        print("epsilon>>" + str(epsilon))
         
         linear_speed = cmd_vel_value.linear.x
         angular_speed = cmd_vel_value.angular.z
@@ -369,22 +369,22 @@ class SumitXlEnv(robot_gazebo_env.RobotGazeboEnv):
             """
             odom_angular_vel = current_odometry.twist.twist.angular.z
             
-            rospy.logdebug("Linear VEL=" + str(odom_linear_vel) + ", ?RANGE=[" + str(linear_speed_minus) + ","+str(linear_speed_plus)+"]")
-            rospy.logdebug("Angular VEL=" + str(odom_angular_vel) + ", ?RANGE=[" + str(angular_speed_minus) + ","+str(angular_speed_plus)+"]")
+            print("Linear VEL=" + str(odom_linear_vel) + ", ?RANGE=[" + str(linear_speed_minus) + ","+str(linear_speed_plus)+"]")
+            print("Angular VEL=" + str(odom_angular_vel) + ", ?RANGE=[" + str(angular_speed_minus) + ","+str(angular_speed_plus)+"]")
             
             linear_vel_are_close = (odom_linear_vel <= linear_speed_plus) and (odom_linear_vel > linear_speed_minus)
             angular_vel_are_close = (odom_angular_vel <= angular_speed_plus) and (odom_angular_vel > angular_speed_minus)
             
             if linear_vel_are_close and angular_vel_are_close:
-                rospy.logdebug("Reached Velocity!")
+                print("Reached Velocity!")
                 end_wait_time = rospy.get_rostime().to_sec()
                 break
-            rospy.logdebug("Not there yet, keep waiting...")
+            print("Not there yet, keep waiting...")
             rate.sleep()
         delta_time = end_wait_time- start_wait_time
-        rospy.logdebug("[Wait Time=" + str(delta_time)+"]")
+        print("[Wait Time=" + str(delta_time)+"]")
         
-        rospy.logdebug("END wait_until_twist_achieved...")
+        print("END wait_until_twist_achieved...")
         
         return delta_time
         

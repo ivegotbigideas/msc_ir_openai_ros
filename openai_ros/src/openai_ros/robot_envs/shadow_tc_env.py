@@ -38,7 +38,7 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        rospy.logdebug("Start ShadowTcEnv INIT...")
+        print("Start ShadowTcEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -58,7 +58,7 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
 
 
 
-        rospy.logdebug("ShadowTcEnv unpause...")
+        print("ShadowTcEnv unpause...")
         self.gazebo.unpauseSim()
         #self.controllers_object.reset_controllers()
         
@@ -72,7 +72,7 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         
         self.gazebo.pauseSim()
         
-        rospy.logdebug("Finished ShadowTcEnv INIT...")
+        print("Finished ShadowTcEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -83,9 +83,9 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the sensors, publishers and other simulation systems are
         operational.
         """
-        rospy.logdebug("ShadowTcEnv check_all_systems_ready...")
+        print("ShadowTcEnv check_all_systems_ready...")
         self._check_all_sensors_ready()
-        rospy.logdebug("END ShadowTcEnv _check_all_systems_ready...")
+        print("END ShadowTcEnv _check_all_systems_ready...")
         return True
 
 
@@ -93,21 +93,21 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        rospy.logdebug("START ALL SENSORS READY")
+        print("START ALL SENSORS READY")
         self._check_imu_ready()
         self._check_joint_states_ready()
         #self._check_planning_scene_ready()
         
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
         
     
     def _check_imu_ready(self):
         self.imu = None
-        rospy.logdebug("Waiting for /imu/data to be READY...")
+        print("Waiting for /imu/data to be READY...")
         while self.imu is None and not rospy.is_shutdown():
             try:
                 self.imu = rospy.wait_for_message("/imu/data", Imu, timeout=5.0)
-                rospy.logdebug("Current/imu/data READY=>")
+                print("Current/imu/data READY=>")
 
             except:
                 rospy.logerr("Current /imu/data not ready yet, retrying for getting imu")
@@ -116,11 +116,11 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_joint_states_ready(self):
         self.joint_states = None
-        rospy.logdebug("Waiting for /joint_states to be READY...")
+        print("Waiting for /joint_states to be READY...")
         while self.joint_states is None and not rospy.is_shutdown():
             try:
                 self.joint_states = rospy.wait_for_message("/joint_states", JointState, timeout=1.0)
-                rospy.logdebug("Current /joint_states READY=>")
+                print("Current /joint_states READY=>")
 
             except:
                 rospy.logerr("Current /joint_states not ready yet, retrying for getting joint_states")
@@ -129,11 +129,11 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
     
     def _check_planning_scene_ready(self):
         self.planning_scene = None
-        rospy.logdebug("Waiting for /planning_scene to be READY...")
+        print("Waiting for /planning_scene to be READY...")
         while self.planning_scene is None and not rospy.is_shutdown():
             try:
                 self.planning_scene = rospy.wait_for_message('/planning_scene', PlanningScene, timeout=1.0)
-                rospy.logdebug("Current /planning_scene READY=>")
+                print("Current /planning_scene READY=>")
 
             except:
                 rospy.logerr("Current /planning_scene not ready yet, retrying for getting planning_scene")
@@ -162,10 +162,10 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         Setup of the movement system.
         :return:
         """
-        rospy.logdebug("START _setup_smart_grasper")
+        print("START _setup_smart_grasper")
         # We need to tell it to not start a node
         self.sgs = SmartGrasper(init_ros_node=False)
-        rospy.logdebug("END _setup_smart_grasper")
+        print("END _setup_smart_grasper")
     
     # Methods that the TrainingEnvironment will need to define here as virtual
     # because they will be used in RobotGazeboEnv GrandParentClass and defined in the
@@ -223,12 +223,12 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         This means that if the simulation is NOT
         running it wont get the Ball information of position.
         """
-        rospy.logdebug("START get_ball_pose ==>")
+        print("START get_ball_pose ==>")
         self.gazebo.unpauseSim()
         ball_pose = self.sgs.get_object_pose()
         self.gazebo.pauseSim()
-        rospy.logdebug("ball_pose ==>"+str(ball_pose))
-        rospy.logdebug("STOP get_ball_pose ==>")
+        print("ball_pose ==>"+str(ball_pose))
+        print("STOP get_ball_pose ==>")
         
         return ball_pose
         
@@ -239,11 +239,11 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         This means that if the simulation is NOT
         running it wont get the TCP information of position.
         """
-        rospy.logdebug("START get_tip_pose ==>")
+        print("START get_tip_pose ==>")
         self.gazebo.unpauseSim()
         tcp_pose = self.sgs.get_tip_pose()
         self.gazebo.pauseSim()
-        rospy.logdebug("END get_tip_pose ==>")
+        print("END get_tip_pose ==>")
         return tcp_pose
         
     def move_tcp_world_frame(self, desired_pose):
@@ -284,9 +284,9 @@ class ShadowTcEnv(robot_gazebo_env.RobotGazeboEnv):
         We puase and unpause for the smae exact reason as the get TCP and get ball pos.
         Being a service, untill the simulation is unpaused it wont get response.
         """
-        rospy.logdebug("START get_fingers_colision")
+        print("START get_fingers_colision")
         self.sgs.check_fingers_collisions(activate)
-        rospy.logdebug("END get_fingers_colision")
+        print("END get_fingers_colision")
 
         
     def get_fingers_colision(self, object_collision_name):

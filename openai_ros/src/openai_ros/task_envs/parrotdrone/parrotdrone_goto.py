@@ -93,8 +93,8 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         
         self.observation_space = spaces.Box(low, high)
         
-        rospy.logdebug("ACTION SPACES TYPE===>"+str(self.action_space))
-        rospy.logdebug("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        print("ACTION SPACES TYPE===>"+str(self.action_space))
+        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         self.closer_to_point_reward = rospy.get_param("/drone/closer_to_point_reward")
@@ -148,7 +148,7 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         :param action: The action integer that set s what movement to do next.
         """
         
-        rospy.logdebug("Start Set Action ==>"+str(action))
+        print("Start Set Action ==>"+str(action))
         # We convert the actions to speed movements to send to the parent class of Parrot
         linear_speed_vector = Vector3()
         angular_speed = 0.0
@@ -179,7 +179,7 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
                         epsilon=0.05,
                         update_rate=10)
         
-        rospy.logdebug("END Set Action ==>"+str(action))
+        print("END Set Action ==>"+str(action))
 
     def _get_obs(self):
         """
@@ -188,7 +188,7 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         droneEnv API DOCS
         :return:
         """
-        rospy.logdebug("Start Get Observation ==>")
+        print("Start Get Observation ==>")
         # We get the laser scan data
         gt_pose = self.get_gt_pose()
         
@@ -219,8 +219,8 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
                             round(sonar_value,1)]
                                                                 
         
-        rospy.logdebug("Observations==>"+str(observations))
-        rospy.logdebug("END Get Observation ==>")
+        print("Observations==>"+str(observations))
+        print("END Get Observation ==>")
         return observations
         
 
@@ -252,26 +252,26 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         drone_flipped = self.drone_has_flipped(current_orientation)
         has_reached_des_point = self.is_in_desired_position(current_position, self.desired_point_epsilon)
         
-        rospy.logwarn(">>>>>> DONE RESULTS <<<<<")
+        print(">>>>>> DONE RESULTS <<<<<")
         if not is_inside_workspace_now:
             rospy.logerr("is_inside_workspace_now="+str(is_inside_workspace_now))
         else:
-            rospy.logwarn("is_inside_workspace_now="+str(is_inside_workspace_now))
+            print("is_inside_workspace_now="+str(is_inside_workspace_now))
             
         if sonar_detected_something_too_close_now:
             rospy.logerr("sonar_detected_something_too_close_now="+str(sonar_detected_something_too_close_now))
         else:
-            rospy.logwarn("sonar_detected_something_too_close_now="+str(sonar_detected_something_too_close_now))
+            print("sonar_detected_something_too_close_now="+str(sonar_detected_something_too_close_now))
             
         if drone_flipped:
             rospy.logerr("drone_flipped="+str(drone_flipped))
         else:
-            rospy.logwarn("drone_flipped="+str(drone_flipped))
+            print("drone_flipped="+str(drone_flipped))
         
         if has_reached_des_point:
             rospy.logerr("has_reached_des_point="+str(has_reached_des_point))
         else:
-            rospy.logwarn("has_reached_des_point="+str(has_reached_des_point))
+            print("has_reached_des_point="+str(has_reached_des_point))
         
         # We see if we are outside the Learning Space
         episode_done = not(is_inside_workspace_now) or sonar_detected_something_too_close_now or drone_flipped or has_reached_des_point
@@ -279,7 +279,7 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         if episode_done:
             rospy.logerr("episode_done====>"+str(episode_done))
         else:
-            rospy.logwarn("episode_done====>"+str(episode_done))
+            print("episode_done====>"+str(episode_done))
 
         return episode_done
 
@@ -298,7 +298,7 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
             
             # If there has been a decrease in the distance to the desired point, we reward it
             if distance_difference < 0.0:
-                rospy.logwarn("DECREASE IN DISTANCE GOOD")
+                print("DECREASE IN DISTANCE GOOD")
                 reward = self.closer_to_point_reward
             else:
                 rospy.logerr("ENCREASE IN DISTANCE BAD")
@@ -315,11 +315,11 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         self.previous_distance_from_des_point = distance_from_des_point
 
 
-        rospy.logdebug("reward=" + str(reward))
+        print("reward=" + str(reward))
         self.cumulated_reward += reward
-        rospy.logdebug("Cumulated_reward=" + str(self.cumulated_reward))
+        print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        rospy.logdebug("Cumulated_steps=" + str(self.cumulated_steps))
+        print("Cumulated_steps=" + str(self.cumulated_steps))
         
         return reward
 
@@ -347,14 +347,14 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         
         is_in_desired_pos = x_pos_are_close and y_pos_are_close
         
-        rospy.logwarn("###### IS DESIRED POS ? ######")
-        rospy.logwarn("current_position"+str(current_position))
-        rospy.logwarn("x_pos_plus"+str(x_pos_plus)+",x_pos_minus="+str(x_pos_minus))
-        rospy.logwarn("y_pos_plus"+str(y_pos_plus)+",y_pos_minus="+str(y_pos_minus))
-        rospy.logwarn("x_pos_are_close"+str(x_pos_are_close))
-        rospy.logwarn("y_pos_are_close"+str(y_pos_are_close))
-        rospy.logwarn("is_in_desired_pos"+str(is_in_desired_pos))
-        rospy.logwarn("############")
+        print("###### IS DESIRED POS ? ######")
+        print("current_position"+str(current_position))
+        print("x_pos_plus"+str(x_pos_plus)+",x_pos_minus="+str(x_pos_minus))
+        print("y_pos_plus"+str(y_pos_plus)+",y_pos_minus="+str(y_pos_minus))
+        print("x_pos_are_close"+str(x_pos_are_close))
+        print("y_pos_are_close"+str(y_pos_are_close))
+        print("is_in_desired_pos"+str(is_in_desired_pos))
+        print("############")
         
         return is_in_desired_pos
     
@@ -364,12 +364,12 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         """
         is_inside = False
 
-        rospy.logwarn("##### INSIDE WORK SPACE? #######")
-        rospy.logwarn("XYZ current_position"+str(current_position))
-        rospy.logwarn("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
-        rospy.logwarn("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
-        rospy.logwarn("work_space_z_max"+str(self.work_space_z_max)+",work_space_z_min="+str(self.work_space_z_min))
-        rospy.logwarn("############")
+        print("##### INSIDE WORK SPACE? #######")
+        print("XYZ current_position"+str(current_position))
+        print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
+        print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
+        print("work_space_z_max"+str(self.work_space_z_max)+",work_space_z_min="+str(self.work_space_z_min))
+        print("############")
 
         if current_position.x > self.work_space_x_min and current_position.x <= self.work_space_x_max:
             if current_position.y > self.work_space_y_min and current_position.y <= self.work_space_y_max:
@@ -382,9 +382,9 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         """
         Detects if there is something too close to the drone front
         """
-        rospy.logwarn("##### SONAR TOO CLOSE? #######")
-        rospy.logwarn("sonar_value"+str(sonar_value)+",min_sonar_value="+str(self.min_sonar_value))
-        rospy.logwarn("############")
+        print("##### SONAR TOO CLOSE? #######")
+        print("sonar_value"+str(sonar_value)+",min_sonar_value="+str(self.min_sonar_value))
+        print("############")
         
         too_close = sonar_value < self.min_sonar_value
         
@@ -400,11 +400,11 @@ class ParrotDroneGotoEnv(parrotdrone_env.ParrotDroneEnv):
         self.max_roll = rospy.get_param("/drone/max_roll")
         self.max_pitch = rospy.get_param("/drone/max_pitch")
         
-        rospy.logwarn("#### HAS FLIPPED? ########")
-        rospy.logwarn("RPY current_orientation"+str(current_orientation))
-        rospy.logwarn("max_roll"+str(self.max_roll)+",min_roll="+str(-1*self.max_roll))
-        rospy.logwarn("max_pitch"+str(self.max_pitch)+",min_pitch="+str(-1*self.max_pitch))
-        rospy.logwarn("############")
+        print("#### HAS FLIPPED? ########")
+        print("RPY current_orientation"+str(current_orientation))
+        print("max_roll"+str(self.max_roll)+",min_roll="+str(-1*self.max_roll))
+        print("max_pitch"+str(self.max_pitch)+",min_pitch="+str(-1*self.max_pitch))
+        print("############")
         
         
         if current_orientation.x > -1*self.max_roll and current_orientation.x <= self.max_roll:

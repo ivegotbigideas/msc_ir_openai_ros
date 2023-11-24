@@ -18,9 +18,9 @@ class GazeboConnection():
 
         # Setup the Gravity Controle system
         service_name = '/gazebo/set_physics_properties'
-        rospy.logdebug("Waiting for service " + str(service_name))
+        print("Waiting for service " + str(service_name))
         rospy.wait_for_service(service_name)
-        rospy.logdebug("Service Found " + str(service_name))
+        print("Service Found " + str(service_name))
 
         self.set_physics = rospy.ServiceProxy(service_name, SetPhysicsProperties)
         self.start_init_physics_parameters = start_init_physics_parameters
@@ -30,24 +30,24 @@ class GazeboConnection():
         self.pauseSim()
 
     def pauseSim(self):
-        rospy.logdebug("PAUSING START")
+        print("PAUSING START")
         rospy.wait_for_service('/gazebo/pause_physics')
         try:
             self.pause()
         except rospy.ServiceException as e:
             print ("/gazebo/pause_physics service call failed")
             
-        rospy.logdebug("PAUSING FINISH")
+        print("PAUSING FINISH")
         
     def unpauseSim(self):
-        rospy.logdebug("UNPAUSING START")
+        print("UNPAUSING START")
         rospy.wait_for_service('/gazebo/unpause_physics')
         try:
             self.unpause()
         except rospy.ServiceException as e:
             print ("/gazebo/unpause_physics service call failed")
         
-        rospy.logdebug("UNPAUSING FiNISH")
+        print("UNPAUSING FINISH")
         
     
     def resetSim(self):
@@ -87,7 +87,7 @@ class GazeboConnection():
         self.resetSim()
 
         if self.start_init_physics_parameters:
-            rospy.logdebug("Initialising Simulation Physics Parameters")
+            print("Initialising Simulation Physics Parameters")
             self.init_physics_parameters()
         else:
             rospy.logerr("NOT Initialising Simulation Physics Parameters")
@@ -130,10 +130,10 @@ class GazeboConnection():
         set_physics_request.gravity = self._gravity
         set_physics_request.ode_config = self._ode_config
 
-        rospy.logdebug(str(set_physics_request.gravity))
+        print(str(set_physics_request.gravity))
 
         result = self.set_physics(set_physics_request)
-        rospy.logdebug("Gravity Update Result==" + str(result.success) + ",message==" + str(result.status_message))
+        print("Gravity Update Result==" + str(result.success) + ",message==" + str(result.status_message))
 
         self.unpauseSim()
 

@@ -30,7 +30,7 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         
         # Only variable needed to be set here
 
-        rospy.logdebug("Start ShadowTcGetBallEnv INIT...")
+        print("Start ShadowTcGetBallEnv INIT...")
         number_actions = rospy.get_param('/shadow_tc/n_actions')
         self.action_space = spaces.Discrete(number_actions)
         
@@ -70,8 +70,8 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         
         self.observation_space = spaces.Box(low, high)
         
-        rospy.logdebug("ACTION SPACES TYPE===>"+str(self.action_space))
-        rospy.logdebug("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        print("ACTION SPACES TYPE===>"+str(self.action_space))
+        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         
@@ -80,17 +80,17 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
 
         self.cumulated_steps = 0.0
 
-        rospy.logdebug("END shadow_tcGetBallEnv INIT...")
+        print("END shadow_tcGetBallEnv INIT...")
 
     def _set_init_pose(self):
         """
         Sets the UR5 arm to the initial position and the objects to the original position.
         """
-        rospy.logdebug("START _set_init_pose...")
+        print("START _set_init_pose...")
         # We set the angles to zero of the limb
         self.reset_scene()
         
-        rospy.logdebug("END _set_init_pose...")
+        print("END _set_init_pose...")
         return True
 
 
@@ -100,16 +100,16 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         of an episode.
         :return:
         """
-        rospy.logdebug("START TaskEnv _init_env_variables")
+        print("START TaskEnv _init_env_variables")
         # For Info Purposes
         self.cumulated_reward = 0.0
         
         self.ball_pose = self.get_ball_pose()
         tcp_pose = self.get_tip_pose()
-        rospy.logdebug("TCP POSE ===>"+str(tcp_pose))
+        print("TCP POSE ===>"+str(tcp_pose))
         self.previous_distance_from_ball = self.get_distance_from_point(self.ball_pose.position, tcp_pose.position)
 
-        rospy.logdebug("END TaskEnv _init_env_variables")
+        print("END TaskEnv _init_env_variables")
         
         
 
@@ -120,7 +120,7 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         :param action: The action integer that sets what movement to do next.
         """
         
-        rospy.logdebug("Start Set Action ==>"+str(action))
+        print("Start Set Action ==>"+str(action))
        
         
         increment_vector = Vector3() 
@@ -143,7 +143,7 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         elif action == 7: # Close Claw
            action_id = "close"
         
-        rospy.logdebug("Action_id="+str(action_id)+",IncrementVector===>"+str(increment_vector))
+        print("Action_id="+str(action_id)+",IncrementVector===>"+str(increment_vector))
 
         if action_id == "move":
             # We tell shadow_tc the action to perform
@@ -158,7 +158,7 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         elif action_id == "close":
             self.close_hand()
             
-        rospy.logdebug("END Set Action ==>"+str(action)+",action_id="+str(action_id)+",IncrementVector===>"+str(increment_vector))
+        print("END Set Action ==>"+str(action)+",action_id="+str(action_id)+",IncrementVector===>"+str(increment_vector))
 
     def _get_obs(self):
         """
@@ -167,7 +167,7 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         shadow_tcEnv API DOCS.
         :return: observation
         """
-        rospy.logdebug("Start Get Observation ==>")
+        print("Start Get Observation ==>")
         
         tcp_pose = self.get_tip_pose()
         
@@ -189,8 +189,8 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
                         int(f3_collided)
                         ]
                         
-        rospy.logdebug("Observations ==>"+str(observation))
-        rospy.logdebug("END Get Observation ==>")
+        print("Observations ==>"+str(observation))
+        print("END Get Observation ==>")
 
         return observation
         
@@ -220,11 +220,11 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         
         done = has_reached_the_ball or not(bool_is_inside_workspace)
         
-        rospy.logdebug("#### IS DONE ? ####")
-        rospy.logdebug("Not bool_is_inside_workspace ?="+str(not(bool_is_inside_workspace)))
-        rospy.logdebug("has_reached_the_ball ?="+str(has_reached_the_ball))
-        rospy.logdebug("done ?="+str(done))
-        rospy.logdebug("#### #### ####")
+        print("#### IS DONE ? ####")
+        print("Not bool_is_inside_workspace ?="+str(not(bool_is_inside_workspace)))
+        print("has_reached_the_ball ?="+str(has_reached_the_ball))
+        print("done ?="+str(done))
+        print("#### #### ####")
         
         return done
 
@@ -274,11 +274,11 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         self.previous_distance_from_ball = distance_from_ball
 
 
-        rospy.logdebug("reward=" + str(reward))
+        print("reward=" + str(reward))
         self.cumulated_reward += reward
-        rospy.logdebug("Cumulated_reward=" + str(self.cumulated_reward))
+        print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        rospy.logdebug("Cumulated_steps=" + str(self.cumulated_steps))
+        print("Cumulated_steps=" + str(self.cumulated_steps))
 
         return reward
 
@@ -297,12 +297,12 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         
         reached_ball_b = distance_to_ball_ok and finguers_collided
         
-        rospy.logdebug("###### REACHED BLOCK ? ######")
-        rospy.logdebug("distance_from_ball==>"+str(distance_from_ball))
-        rospy.logdebug("distance_to_ball_ok==>"+str(distance_to_ball_ok))
-        rospy.logdebug("reached_ball_b==>"+str(reached_ball_b))
-        rospy.logdebug("finguers_collided==>"+str(finguers_collided))
-        rospy.logdebug("############")
+        print("###### REACHED BLOCK ? ######")
+        print("distance_from_ball==>"+str(distance_from_ball))
+        print("distance_to_ball_ok==>"+str(distance_to_ball_ok))
+        print("reached_ball_b==>"+str(reached_ball_b))
+        print("finguers_collided==>"+str(finguers_collided))
+        print("############")
         
         return reached_ball_b
 
@@ -327,12 +327,12 @@ class ShadowTcGetBallEnv(shadow_tc_env.ShadowTcEnv):
         """
         is_inside = False
 
-        rospy.logdebug("##### INSIDE WORK SPACE? #######")
-        rospy.logdebug("XYZ current_position"+str(current_position))
-        rospy.logdebug("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
-        rospy.logdebug("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
-        rospy.logdebug("work_space_z_max"+str(self.work_space_z_max)+",work_space_z_min="+str(self.work_space_z_min))
-        rospy.logdebug("############")
+        print("##### INSIDE WORK SPACE? #######")
+        print("XYZ current_position"+str(current_position))
+        print("work_space_x_max"+str(self.work_space_x_max)+",work_space_x_min="+str(self.work_space_x_min))
+        print("work_space_y_max"+str(self.work_space_y_max)+",work_space_y_min="+str(self.work_space_y_min))
+        print("work_space_z_max"+str(self.work_space_z_max)+",work_space_z_min="+str(self.work_space_z_min))
+        print("############")
 
         if current_position.x > self.work_space_x_min and current_position.x <= self.work_space_x_max:
             if current_position.y > self.work_space_y_min and current_position.y <= self.work_space_y_max:

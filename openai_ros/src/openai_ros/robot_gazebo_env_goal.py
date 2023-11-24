@@ -58,7 +58,7 @@ class RobotGazeboEnv(gym.GoalEnv):
         return obs, reward, done, info
 
     def reset(self):
-        rospy.logdebug("Reseting RobotGazeboEnvironment")
+        print("Reseting RobotGazeboEnvironment")
         print ("Entered reset")
         self._reset_sim()
         self._init_env_variables()
@@ -72,7 +72,7 @@ class RobotGazeboEnv(gym.GoalEnv):
         Use it for closing GUIS and other systems that need closing.
         :return:
         """
-        rospy.logdebug("Closing RobotGazeboEnvironment")
+        print("Closing RobotGazeboEnvironment")
         rospy.signal_shutdown("Closing RobotGazeboEnvironment")
 
     def _update_episode(self):

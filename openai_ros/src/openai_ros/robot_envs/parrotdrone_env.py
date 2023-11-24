@@ -48,7 +48,7 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        rospy.logdebug("Start ParrotDroneEnv INIT...")
+        print("Start ParrotDroneEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -89,7 +89,7 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
         
-        rospy.logdebug("Finished ParrotDroneEnv INIT...")
+        print("Finished ParrotDroneEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -108,23 +108,23 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        rospy.logdebug("START ALL SENSORS READY")
+        print("START ALL SENSORS READY")
         self._check_down_camera_rgb_image_raw_ready()
         self._check_front_camera_rgb_image_raw_ready()
         self._check_imu_ready()
         self._check_sonar_ready()
         self._check_gt_pose_ready()
         self._check_gt_vel_ready()
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
 
         
     def _check_down_camera_rgb_image_raw_ready(self):
         self.down_camera_rgb_image_raw = None
-        rospy.logdebug("Waiting for /drone/down_camera/image_raw to be READY...")
+        print("Waiting for /drone/down_camera/image_raw to be READY...")
         while self.down_camera_rgb_image_raw is None and not rospy.is_shutdown():
             try:
                 self.down_camera_rgb_image_raw = rospy.wait_for_message("/drone/down_camera/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /drone/down_camera/image_raw READY=>")
+                print("Current /drone/down_camera/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /drone/down_camera/image_raw not ready yet, retrying for getting down_camera_rgb_image_raw")
@@ -132,11 +132,11 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_front_camera_rgb_image_raw_ready(self):
         self.front_camera_rgb_image_raw = None
-        rospy.logdebug("Waiting for /drone/front_camera/image_raw to be READY...")
+        print("Waiting for /drone/front_camera/image_raw to be READY...")
         while self.front_camera_rgb_image_raw is None and not rospy.is_shutdown():
             try:
                 self.front_camera_rgb_image_raw = rospy.wait_for_message("/drone/front_camera/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /drone/front_camera/image_raw READY=>")
+                print("Current /drone/front_camera/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /drone/front_camera/image_raw not ready yet, retrying for getting front_camera_rgb_image_raw")
@@ -145,11 +145,11 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _check_imu_ready(self):
         self.imu = None
-        rospy.logdebug("Waiting for /drone/imu to be READY...")
+        print("Waiting for /drone/imu to be READY...")
         while self.imu is None and not rospy.is_shutdown():
             try:
                 self.imu = rospy.wait_for_message("/drone/imu", Imu, timeout=5.0)
-                rospy.logdebug("Current/drone/imu READY=>")
+                print("Current/drone/imu READY=>")
 
             except:
                 rospy.logerr("Current /drone/imu not ready yet, retrying for getting imu")
@@ -158,11 +158,11 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_sonar_ready(self):
         self.sonar = None
-        rospy.logdebug("Waiting for /drone/sonar to be READY...")
+        print("Waiting for /drone/sonar to be READY...")
         while self.sonar is None and not rospy.is_shutdown():
             try:
                 self.sonar = rospy.wait_for_message("/drone/sonar", Range, timeout=5.0)
-                rospy.logdebug("Current/drone/sonar READY=>")
+                print("Current/drone/sonar READY=>")
 
             except:
                 rospy.logerr("Current /drone/sonar not ready yet, retrying for getting sonar")
@@ -173,11 +173,11 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
             
     def _check_gt_pose_ready(self):
         self.gt_pose = None
-        rospy.logdebug("Waiting for /drone/gt_pose to be READY...")
+        print("Waiting for /drone/gt_pose to be READY...")
         while self.gt_pose is None and not rospy.is_shutdown():
             try:
                 self.gt_pose = rospy.wait_for_message("/drone/gt_pose", Pose, timeout=5.0)
-                rospy.logdebug("Current /drone/gt_pose READY=>")
+                print("Current /drone/gt_pose READY=>")
 
             except:
                 rospy.logerr("Current /drone/gt_pose not ready yet, retrying for getting gt_pose")
@@ -188,11 +188,11 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
             
     def _check_gt_vel_ready(self):
         self.gt_vel = None
-        rospy.logdebug("Waiting for /drone/gt_vel to be READY...")
+        print("Waiting for /drone/gt_vel to be READY...")
         while self.gt_vel is None and not rospy.is_shutdown():
             try:
                 self.gt_vel = rospy.wait_for_message("/drone/gt_vel", Twist, timeout=5.0)
-                rospy.logdebug("Current /drone/gt_vel READY=>")
+                print("Current /drone/gt_vel READY=>")
 
             except:
                 rospy.logerr("Current /drone/gt_vel not ready yet, retrying for getting gt_vel")
@@ -223,53 +223,53 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the publishers are working
         :return:
         """
-        rospy.logdebug("START ALL SENSORS READY")
+        print("START ALL SENSORS READY")
         self._check_cmd_vel_pub_connection()
         self._check_takeoff_pub_connection()
         self._check_land_pub_connection()
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
 
     def _check_cmd_vel_pub_connection(self):
 
         rate = rospy.Rate(10)  # 10hz
         while self._cmd_vel_pub.get_num_connections() == 0 and not rospy.is_shutdown():
-            rospy.logdebug("No susbribers to _cmd_vel_pub yet so we wait and try again")
+            print("No susbribers to _cmd_vel_pub yet so we wait and try again")
             try:
                 rate.sleep()
             except rospy.ROSInterruptException:
                 # This is to avoid error when world is rested, time when backwards.
                 pass
-        rospy.logdebug("_cmd_vel_pub Publisher Connected")
+        print("_cmd_vel_pub Publisher Connected")
 
-        rospy.logdebug("All Publishers READY")
+        print("All Publishers READY")
         
     def _check_takeoff_pub_connection(self):
 
         rate = rospy.Rate(10)  # 10hz
         while self._takeoff_pub.get_num_connections() == 0 and not rospy.is_shutdown():
-            rospy.logdebug("No susbribers to _takeoff_pub yet so we wait and try again")
+            print("No susbribers to _takeoff_pub yet so we wait and try again")
             try:
                 rate.sleep()
             except rospy.ROSInterruptException:
                 # This is to avoid error when world is rested, time when backwards.
                 pass
-        rospy.logdebug("_takeoff_pub Publisher Connected")
+        print("_takeoff_pub Publisher Connected")
 
-        rospy.logdebug("All Publishers READY")
+        print("All Publishers READY")
         
     def _check_land_pub_connection(self):
 
         rate = rospy.Rate(10)  # 10hz
         while self._land_pub.get_num_connections() == 0 and not rospy.is_shutdown():
-            rospy.logdebug("No susbribers to _land_pub yet so we wait and try again")
+            print("No susbribers to _land_pub yet so we wait and try again")
             try:
                 rate.sleep()
             except rospy.ROSInterruptException:
                 # This is to avoid error when world is rested, time when backwards.
                 pass
-        rospy.logdebug("_land_pub Publisher Connected")
+        print("_land_pub Publisher Connected")
 
-        rospy.logdebug("All Publishers READY")
+        print("All Publishers READY")
     
     # Methods that the TrainingEnvironment will need to define here as virtual
     # because they will be used in RobotGazeboEnv GrandParentClass and defined in the
@@ -357,7 +357,7 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         start_wait_time = rospy.get_rostime().to_sec()
         end_wait_time = 0.0
         
-        rospy.logdebug("epsilon>>" + str(epsilon))
+        print("epsilon>>" + str(epsilon))
         
         while not rospy.is_shutdown():
             current_gt_pose = self._check_gt_pose_ready()
@@ -366,16 +366,16 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
             
             if smaller_than:
                 takeoff_height_achieved = current_height <= heigh_value_to_check
-                rospy.logwarn("SMALLER THAN HEIGHT...current_height="+str(current_height)+"<="+str(heigh_value_to_check))
+                print("SMALLER THAN HEIGHT...current_height="+str(current_height)+"<="+str(heigh_value_to_check))
             else:
                 takeoff_height_achieved = current_height >= heigh_value_to_check
-                rospy.logwarn("BIGGER THAN HEIGHT...current_height="+str(current_height)+">="+str(heigh_value_to_check))
+                print("BIGGER THAN HEIGHT...current_height="+str(current_height)+">="+str(heigh_value_to_check))
             
             if takeoff_height_achieved:
-                rospy.logwarn("Reached Height!")
+                print("Reached Height!")
                 end_wait_time = rospy.get_rostime().to_sec()
                 break
-            rospy.logwarn("Height Not there yet, keep waiting...")
+            print("Height Not there yet, keep waiting...")
             rate.sleep()
         
     
@@ -395,7 +395,7 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         cmd_vel_value.linear.y = linear_speed_vector.y
         cmd_vel_value.linear.z = linear_speed_vector.z
         cmd_vel_value.angular.z = angular_speed
-        rospy.logdebug("TurtleBot2 Base Twist Cmd>>" + str(cmd_vel_value))
+        print("TurtleBot2 Base Twist Cmd>>" + str(cmd_vel_value))
         self._check_cmd_vel_pub_connection()
         self._cmd_vel_pub.publish(cmd_vel_value)
         """
@@ -423,15 +423,15 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         :param update_rate: Rate at which we check the odometry.
         :return:
         """
-        rospy.logwarn("START wait_until_twist_achieved...")
+        print("START wait_until_twist_achieved...")
         
         rate = rospy.Rate(update_rate)
         start_wait_time = rospy.get_rostime().to_sec()
         end_wait_time = 0.0
         epsilon = 0.05
         
-        rospy.logwarn("Desired Twist Cmd>>" + str(cmd_vel_value))
-        rospy.logwarn("epsilon>>" + str(epsilon))
+        print("Desired Twist Cmd>>" + str(cmd_vel_value))
+        print("epsilon>>" + str(epsilon))
         
         values_of_ref = [   cmd_vel_value.linear.x,
                             cmd_vel_value.linear.y,
@@ -449,15 +449,15 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
             vel_values_are_close = self.check_array_similar(values_of_ref,values_to_check,epsilon)
             
             if vel_values_are_close:
-                rospy.logwarn("Reached Velocity!")
+                print("Reached Velocity!")
                 end_wait_time = rospy.get_rostime().to_sec()
                 break
-            rospy.logwarn("Not there yet, keep waiting...")
+            print("Not there yet, keep waiting...")
             rate.sleep()
         delta_time = end_wait_time- start_wait_time
-        rospy.logdebug("[Wait Time=" + str(delta_time)+"]")
+        print("[Wait Time=" + str(delta_time)+"]")
         
-        rospy.logwarn("END wait_until_twist_achieved...")
+        print("END wait_until_twist_achieved...")
         
         return delta_time
     
@@ -465,8 +465,8 @@ class ParrotDroneEnv(robot_gazebo_env.RobotGazeboEnv):
         """
         It checks if the check_value id similar to the ref_value
         """
-        rospy.logwarn("ref_value_array="+str(ref_value_array))
-        rospy.logwarn("check_value_array="+str(check_value_array))
+        print("ref_value_array="+str(ref_value_array))
+        print("check_value_array="+str(check_value_array))
         return numpy.allclose(ref_value_array, check_value_array, atol=epsilon)
     
 

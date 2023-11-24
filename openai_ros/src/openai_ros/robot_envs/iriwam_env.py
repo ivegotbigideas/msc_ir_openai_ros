@@ -37,7 +37,7 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
         
         Args:
         """
-        rospy.logdebug("Start IriWamEnv INIT...")
+        print("Start IriWamEnv INIT...")
         # Variables that we give through the constructor.
         # None in this case
 
@@ -57,7 +57,7 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
 
 
 
-        rospy.logdebug("IriWamEnv unpause...")
+        print("IriWamEnv unpause...")
         self.gazebo.unpauseSim()
         
         self._check_all_systems_ready()
@@ -74,7 +74,7 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
 
         self.gazebo.pauseSim()
         
-        rospy.logdebug("Finished IriWamEnv INIT...")
+        print("Finished IriWamEnv INIT...")
 
     # Methods needed by the RobotGazeboEnv
     # ----------------------------
@@ -85,9 +85,9 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
         Checks that all the sensors, publishers and other simulation systems are
         operational.
         """
-        rospy.logdebug("IriWamEnv check_all_systems_ready...")
+        print("IriWamEnv check_all_systems_ready...")
         self._check_all_sensors_ready()
-        rospy.logdebug("END IriWamEnv _check_all_systems_ready...")
+        print("END IriWamEnv _check_all_systems_ready...")
         return True
 
 
@@ -95,22 +95,22 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
     # ----------------------------
 
     def _check_all_sensors_ready(self):
-        rospy.logdebug("START ALL SENSORS READY")
+        print("START ALL SENSORS READY")
         # TODO: Here go the sensors like cameras and joint states
         #self._check_camera_depth_image_raw_ready()
         #self._check_camera_depth_points_ready()
         #self._check_camera_rgb_image_raw_ready()
         self._check_laser_scan_ready()
-        rospy.logdebug("ALL SENSORS READY")
+        print("ALL SENSORS READY")
         
     
     def _check_camera_depth_image_raw_ready(self):
         self.camera_depth_image_raw = None
-        rospy.logdebug("Waiting for /camera/depth/image_raw to be READY...")
+        print("Waiting for /camera/depth/image_raw to be READY...")
         while self.camera_depth_image_raw is None and not rospy.is_shutdown():
             try:
                 self.camera_depth_image_raw = rospy.wait_for_message("/camera/depth/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /camera/depth/image_raw READY=>")
+                print("Current /camera/depth/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /camera/depth/image_raw not ready yet, retrying for getting camera_depth_image_raw")
@@ -119,11 +119,11 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_camera_depth_points_ready(self):
         self.camera_depth_points = None
-        rospy.logdebug("Waiting for /camera/depth/points to be READY...")
+        print("Waiting for /camera/depth/points to be READY...")
         while self.camera_depth_points is None and not rospy.is_shutdown():
             try:
                 self.camera_depth_points = rospy.wait_for_message("/camera/depth/points", PointCloud2, timeout=10.0)
-                rospy.logdebug("Current /camera/depth/points READY=>")
+                print("Current /camera/depth/points READY=>")
 
             except:
                 rospy.logerr("Current /camera/depth/points not ready yet, retrying for getting camera_depth_points")
@@ -132,11 +132,11 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_camera_rgb_image_raw_ready(self):
         self.camera_rgb_image_raw = None
-        rospy.logdebug("Waiting for /camera/rgb/image_raw to be READY...")
+        print("Waiting for /camera/rgb/image_raw to be READY...")
         while self.camera_rgb_image_raw is None and not rospy.is_shutdown():
             try:
                 self.camera_rgb_image_raw = rospy.wait_for_message("/camera/rgb/image_raw", Image, timeout=5.0)
-                rospy.logdebug("Current /camera/rgb/image_raw READY=>")
+                print("Current /camera/rgb/image_raw READY=>")
 
             except:
                 rospy.logerr("Current /camera/rgb/image_raw not ready yet, retrying for getting camera_rgb_image_raw")
@@ -145,11 +145,11 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
 
     def _check_laser_scan_ready(self):
         self.laser_scan = None
-        rospy.logdebug("Waiting for /laser_scan to be READY...")
+        print("Waiting for /laser_scan to be READY...")
         while self.laser_scan is None and not rospy.is_shutdown():
             try:
                 self.laser_scan = rospy.wait_for_message("/laser_scan", LaserScan, timeout=5.0)
-                rospy.logdebug("Current /laser_scan READY=>")
+                print("Current /laser_scan READY=>")
 
             except:
                 rospy.logerr("Current /laser_scan not ready yet, retrying for getting laser_scan")
@@ -158,11 +158,11 @@ class IriWamEnv(robot_gazebo_env.RobotGazeboEnv):
         
     def _check_joint_state_ready(self):
         self.joint_state = None
-        rospy.logdebug("Waiting for /iri_wam/iri_wam_controller/state to be READY...")
+        print("Waiting for /iri_wam/iri_wam_controller/state to be READY...")
         while self.joint_state is None and not rospy.is_shutdown():
             try:
                 self.joint_state = rospy.wait_for_message("/iri_wam/iri_wam_controller/state", JointTrajectoryControllerState, timeout=5.0)
-                rospy.logdebug("Current /iri_wam/iri_wam_controller/state READY=>")
+                print("Current /iri_wam/iri_wam_controller/state READY=>")
 
             except:
                 rospy.logerr("Current /iri_wam/iri_wam_controller/state not ready yet, retrying for getting laser_scan")
@@ -425,5 +425,5 @@ class IriWamExecTrajectory(object):
         if state_result == self.ERROR:
             rospy.logerr("Something went wrong in the Server Side")
         if state_result == self.WARN:
-            rospy.logwarn("There is a warning in the Server Side")
+            print("There is a warning in the Server Side")
         

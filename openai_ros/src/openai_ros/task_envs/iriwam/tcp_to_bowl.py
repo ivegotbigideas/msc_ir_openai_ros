@@ -30,7 +30,7 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         
         # Only variable needed to be set here
 
-        rospy.logdebug("Start IriWamTcpToBowlEnv INIT...")
+        print("Start IriWamTcpToBowlEnv INIT...")
         number_actions = rospy.get_param('/iriwam/n_actions')
         self.action_space = spaces.Discrete(number_actions)
         
@@ -109,8 +109,8 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         
         self.observation_space = spaces.Box(low, high)
         
-        rospy.logdebug("ACTION SPACES TYPE===>"+str(self.action_space))
-        rospy.logdebug("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
+        print("ACTION SPACES TYPE===>"+str(self.action_space))
+        print("OBSERVATION SPACES TYPE===>"+str(self.observation_space))
         
         # Rewards
         
@@ -125,7 +125,7 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
 
         
         
-        rospy.logdebug("END IriWamTcpToBowlEnv INIT...")
+        print("END IriWamTcpToBowlEnv INIT...")
 
     def _set_init_pose(self):
         """
@@ -164,7 +164,7 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         :param action: The action integer that sets what movement to do next.
         """
         
-        rospy.logdebug("Start Set Action ==>"+str(action))
+        print("Start Set Action ==>"+str(action))
        
         
         if action == 0: # Increase joint_0
@@ -212,7 +212,7 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         iriwamEnv API DOCS.
         :return: observation
         """
-        rospy.logdebug("Start Get Observation ==>")
+        print("Start Get Observation ==>")
 
         # We get Join state currently of all the joints
         join_state = self.get_joint_state()
@@ -252,9 +252,9 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         
         done = has_reached_the_block or too_faraway_bowl_b
         
-        rospy.logdebug("#### IS DONE ? ####")
-        rospy.logdebug("done ?="+str(done))
-        rospy.logdebug("#### #### ####")
+        print("#### IS DONE ? ####")
+        print("done ?="+str(done))
+        print("#### #### ####")
         
         return done
 
@@ -278,7 +278,7 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
             
             # If there has been a decrease in the distance to the desired point, we reward it
             if distance_difference < 0.0:
-                rospy.logdebug("DECREASE IN DISTANCE GOOD")
+                print("DECREASE IN DISTANCE GOOD")
                 reward = self.closer_to_block_reward
             else:
                 rospy.logerr("ENCREASE IN DISTANCE BAD")
@@ -298,11 +298,11 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         self.previous_distance_from_block = distance_block_to_tcp
 
 
-        rospy.logdebug("reward=" + str(reward))
+        print("reward=" + str(reward))
         self.cumulated_reward += reward
-        rospy.logdebug("Cumulated_reward=" + str(self.cumulated_reward))
+        print("Cumulated_reward=" + str(self.cumulated_reward))
         self.cumulated_steps += 1
-        rospy.logdebug("Cumulated_steps=" + str(self.cumulated_steps))
+        print("Cumulated_steps=" + str(self.cumulated_steps))
 
         return reward
 
@@ -322,16 +322,16 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
                 index = self.joint_limits.joint_names.index(joint_name)
                 effort_limit = self.joint_limits.effort[index]
                 
-                rospy.logdebug("Joint Effort ==>Name="+str(joint_name)+",Effort="+str(effort_value)+",Limit="+str(effort_limit))
+                print("Joint Effort ==>Name="+str(joint_name)+",Effort="+str(effort_value)+",Limit="+str(effort_limit))
 
                 if abs(effort_value) > effort_limit:
                     is_arm_stuck = True
                     rospy.logerr("Joint Effort TOO MUCH ==>"+str(joint_name)+","+str(effort_value))
                     break
                 else:
-                    rospy.logdebug("Joint Effort is ok==>"+str(joint_name)+","+str(effort_value))
+                    print("Joint Effort is ok==>"+str(joint_name)+","+str(effort_value))
             else:
-                rospy.logdebug("Joint Name is not in the effort dict==>"+str(joint_name))
+                print("Joint Name is not in the effort dict==>"+str(joint_name))
         
         return is_arm_stuck
     
@@ -347,11 +347,11 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
 
         reached_bowl_b = laser_close_enough and magnitude_image_enough
         
-        rospy.logdebug("###### REACHED BLOCK ? ######")
-        rospy.logdebug("laser_close_enough==>"+str(laser_close_enough))
-        rospy.logdebug("magnitude_image_enough==>"+str(magnitude_image_enough))
-        rospy.logdebug("reached_block_b==>"+str(reached_block_b))
-        rospy.logdebug("############")
+        print("###### REACHED BLOCK ? ######")
+        print("laser_close_enough==>"+str(laser_close_enough))
+        print("magnitude_image_enough==>"+str(magnitude_image_enough))
+        print("reached_block_b==>"+str(reached_block_b))
+        print("############")
         
         return reached_block_b
         
@@ -364,10 +364,10 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
 
         too_faraway_b = laser_close_enough and magnitude_image_enough
         
-        rospy.logdebug("###### REACHED BLOCK ? ######")
-        rospy.logdebug("magnitude_image_too_big==>"+str(magnitude_image_too_big))
-        rospy.logdebug("too_faraway_b==>"+str(too_faraway_b))
-        rospy.logdebug("############")
+        print("###### REACHED BLOCK ? ######")
+        print("magnitude_image_too_big==>"+str(magnitude_image_too_big))
+        print("too_faraway_b==>"+str(too_faraway_b))
+        print("############")
         
         return too_faraway_b
     
@@ -425,12 +425,12 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         """
         is_inside = False
 
-        rospy.logdebug("##### INSIDE WORK SPACE? #######")
-        rospy.logdebug("XYZ current_position"+str(current_position))
-        rospy.logdebug("init_joints_x_max"+str(self.init_joints_x_max)+",init_joints_x_min="+str(self.init_joints_x_min))
-        rospy.logdebug("init_joints_y_max"+str(self.init_joints_y_max)+",init_joints_y_min="+str(self.init_joints_y_min))
-        rospy.logdebug("init_joints_z_max"+str(self.init_joints_z_max)+",init_joints_z_min="+str(self.init_joints_z_min))
-        rospy.logdebug("############")
+        print("##### INSIDE WORK SPACE? #######")
+        print("XYZ current_position"+str(current_position))
+        print("init_joints_x_max"+str(self.init_joints_x_max)+",init_joints_x_min="+str(self.init_joints_x_min))
+        print("init_joints_y_max"+str(self.init_joints_y_max)+",init_joints_y_min="+str(self.init_joints_y_min))
+        print("init_joints_z_max"+str(self.init_joints_z_max)+",init_joints_z_min="+str(self.init_joints_z_min))
+        print("############")
 
         if current_position.x > self.init_joints_x_min and current_position.x <= self.init_joints_x_max:
             if current_position.y > self.init_joints_y_min and current_position.y <= self.init_joints_y_max:
@@ -518,7 +518,7 @@ class IriWamTcpToBowlEnv(iriwam_env.iriwamEnv):
         error_y = cy_red - cy_black
         error_array = np.array([error_x,error_y]) 
         magnitude = np.linalg.norm(error_array)
-        rospy.logwarn("Magnitude==>"+str(magnitude))
+        print("Magnitude==>"+str(magnitude))
         
         return magnitude
         
